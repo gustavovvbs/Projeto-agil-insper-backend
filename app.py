@@ -1,65 +1,32 @@
-from flask import Flask, request, jsonify
-import hashlib
-from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
-import datetime 
-import os 
-from dotenv import load_dotenv
-import uvicorn 
-from pymongo import MongoClient
+from flask import Flask 
+from flask_pymongo import PyMongo
+from flask_jwt_extended import JWTManager
+from config import Config 
 
-load_dotenv()
+mongo = PyMongo()
+jwt = JWTManager()
 
-app = Flask(__name__)
-jwt = JWTManager(app)
+def create_app():
+    app = Flask(__name__)
+    app.config.from_object(Config)
 
-app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET')
-app.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(days=1) # define the life span of the token
+    mongo.init_app(app)
+    jwt.init_app(app)
 
+    from resources.auth import auth_bp 
+    from resources.coordination import coordination_bp
+    from resources.professor import professor_bp
+    from resources.student import student_bp
+    from resources.project import project_bp
+    from resources.application import application_bp 
+    from resources.message import message_bp
 
-client = MongoClient(os.getenv('MONGO_URI'))
-db = client['agil-db']
-users_collection = db['users']
+    app.register_blueprint(auth_bp)
+    app.register_blueprint(coordination_bp)
+    app.register_blueprint(professor_bp)
+    app.register_blueprint(student_bp)
+    app.register_blueprint(project_bp)
+    app.register_blueprint(application_bp)
+    app.register_blueprint(message_bp)
 
-@app.route('/api/users', methods=['POST'])
-def register():
-
-    new_user = request.get_json()
-
-    #criando o hash da senha 
-    new_user['password'] = hashlib.sha256(new_user['password'].encode()).hexdigest()
-
-    doc = users_collection.find_one({'username': new_user['username']})
-
-    if not doc:
-        users_collection.insert_one(new_user)
-        return jsonify({'message': 'Usuário criado com sucesso'}), 201
-    else:
-        return jsonify({'message': 'Usuário já existe'}), 400
-
-@app.route('/api/users', methods=['GET'])
-def login():
-    user = request.get_json()
-
-    user_db = users_collection.find_one({'username': user['username']})
-
-    if user_db:
-        encoded_password = hashlib.sha256(user['password'].encode()).hexdigest()
-        if encoded_password == user_db['password']:
-            access_token = create_access_token(identity=user['username'], expires_delta=datetime.timedelta(days=1))
-            return jsonify({'access_token': access_token}), 200
-        
-    return jsonify({'message': 'Usuário ou senha inválidos'}), 401
-
-@app.route('/api/users', methods=['PUT'])
-@jwt_required()
-def update():
-    user = request.get_json()
-    user['username'] = get_jwt_identity()
-
-    users_collection.update_one({'username': user['username']}, {'$set': user})
-
-    return jsonify({'message': 'Usuário atualizado com sucesso'}), 200
-
-if __name__ == '__main__':
-    app.run(debug=True)
-
+    return app 
