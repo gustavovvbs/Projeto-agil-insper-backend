@@ -3,7 +3,10 @@ from flask_pymongo import PyMongo
 from flask_jwt_extended import JWTManager
 from flask_mail import Mail
 from config import Config 
+from flask_apscheduler import APScheduler
 
+
+scheduler = APScheduler()
 mongo = PyMongo()
 jwt = JWTManager()
 mail = Mail()
@@ -13,7 +16,7 @@ def create_app():
 
     mongo.init_app(app)
     jwt.init_app(app)
-   
+    scheduler.init_app(app)
 
     app.config["EMAIL_SERVER"] = "smtp.gmail.com"
     app.config["MAIL_PORT"] = 465
