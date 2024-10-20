@@ -1,18 +1,31 @@
 from flask import Flask 
 from flask_pymongo import PyMongo
 from flask_jwt_extended import JWTManager
+from flask_mail import Mail
 from config import Config 
+from flask_apscheduler import APScheduler
 
+
+scheduler = APScheduler()
 mongo = PyMongo()
 jwt = JWTManager()
-
+mail = Mail()
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
     mongo.init_app(app)
     jwt.init_app(app)
+    scheduler.init_app(app)
 
+    app.config["EMAIL_SERVER"] = "smtp.gmail.com"
+    app.config["MAIL_PORT"] = 465
+    app.config["MAIL_USERNAME"] = "your_mail@gmail.com"
+    app.config["MAIL_PASSWORD"] = "your_email_password"
+    app.config["MAIL_USE_TLS"] = False
+    app.config["MAIL_USE_SSL"] = True
+
+    mail.init_app(app)
     from resources.auth import auth_bp 
     from resources.coordination import coordination_bp
     from resources.professor import professor_bp
