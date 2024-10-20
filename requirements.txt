@@ -7,6 +7,7 @@ python-dotenv
 bs4
 langchain_openai
 langchain-community
+langchain-pinecone
 uvicorn
 pinecone-client 
 flask 
@@ -18,3 +19,5 @@ python-multipart
 pymongo 
 pydantic 
 flask_jwt_extended
+streamlit 
+pinecone 
