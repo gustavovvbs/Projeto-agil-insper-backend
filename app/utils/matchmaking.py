@@ -1,4 +1,4 @@
-from vectorstore import initialize_vector_store
+from utils.vectorstore import initialize_vector_store
 from langchain_core.prompts import ChatPromptTemplate 
 from langchain_openai import ChatOpenAI 
 from langchain_core.runnables import RunnableLambda, RunnablePassthrough

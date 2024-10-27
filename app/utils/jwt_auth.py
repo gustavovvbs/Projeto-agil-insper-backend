@@ -9,7 +9,7 @@ def create_jwt_token(user_id: str, role: str) -> str:
         "role": role
     }
 
-    print(Config.SECRET_KEY)
+
     return jwt.encode(payload, Config.SECRET_KEY, algorithm="HS256")
 
 def decode_jwt_token(token: str) -> dict:

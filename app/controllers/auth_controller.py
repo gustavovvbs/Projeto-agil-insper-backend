@@ -50,6 +50,7 @@ def login_user(data):
         return jsonify({"error": "Invalid credentials"}), 401
 
     #ver oq fzer p n criar um token novo a cada login
+    print(user_record)
     token = create_jwt_token(str(user_record["_id"]), user_record['role'])
 
     #<----------- popo o id do user do dict q vem das collection especifica e adiciono o role_id p ficar mais claro ql eh de role e geral-->
