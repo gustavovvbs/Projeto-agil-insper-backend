@@ -1,41 +1,54 @@
 from pydantic import BaseModel, Field
 from typing import List, Optional
-from datetime import date
-from models.projeto import Projeto
+from datetime import datetime
 from database import init_db
+from bson import ObjectId
 
 class ProcessoSeletivo(BaseModel):
-    data_encerramento: date = Field(..., title="Data de Encerramento", description="Data de encerramento do processo seletivo")
-    projetos: list[Projeto]
+    id: Optional[str] = None
+    titulo: str = Field("Processo não nomeado", title="Título", description="Título do processo seletivo")
+    data_encerramento: datetime = Field(..., title="Data de Encerramento", description="Data de encerramento do processo seletivo")
+    projetos: Optional[List[str]] = Field(None, title="Projetos", description="Projetos do processo seletivo")
 
-    def __init__(self, data_encerramento: date, projetos: List[Projeto]):
+    def __init__(self, data_encerramento: datetime, projetos: Optional[List[str]] = None, id: Optional[str] = None):
         super().__init__(data_encerramento=data_encerramento, projetos=projetos)
-        self.data_encerramento = data_encerramento
-        self.projetos = projetos
-
+  
     def save(self):
         db = init_db()
-        db.processos_seletivos.insert_one({
+        #convertendo pq o bson n encoda
+        if datetime.now() > self.data_encerramento:
+            raise ValueError("Data de encerramento inválida")
+
+        self.id = str(db.processos_seletivos.insert_one({
             'data_encerramento': self.data_encerramento,
             'projetos': self.projetos
-        })
+        }).inserted_id)
 
+
+    @staticmethod
     def get_all():
         db = init_db()
-        processos = db.processos_seletivos.find()
+        processos = list(db.processos_seletivos.find())
         for processo in processos:
-            processo['_id'] = str(processo['_id'])
+            processo['id'] = str(processo['_id'])
+            #popando o _id pq n ta no modelo
+            processo.pop('_id')
+
         return processos
 
-    def get_by_id(id: str):
+    @classmethod
+    def get_by_id(cls, id: str):
         db = init_db()
-        processo = db.processos_seletivos.find_one({'_id': id})
-        processo['_id'] = str(processo['_id'])
-        return processo
+        processo = db.processos_seletivos.find_one({'_id': ObjectId(id)})
+        processo['id'] = str(processo['_id'])
+        #popando o _id pq n ta no modelo
+        processo.pop('_id')
+        return cls(**processo) if processo else None
 
-    def update(self, data):
+    @staticmethod
+    def update(data):
         db = init_db()
-        db.processos_seletivos.update_one({'_id': self.id}, {
+        db.processos_seletivos.update_one({'_id': ObjectId(data['id'])}, {
             '$set': {
                 'data_encerramento': data['data_encerramento'],
                 'projetos': data['projetos']
