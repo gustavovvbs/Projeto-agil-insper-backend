@@ -3,6 +3,7 @@ from utils.jwt_auth import decode_jwt_token
 from models.projeto import Projeto
 from models.processo_seletivo import ProcessoSeletivo
 from models.professor import Professor
+from controllers.projeto_controller import create_projeto, update_projeto, get_projeto, get_all_projetos, delete_projeto
 from bson import ObjectId
 from flask import Blueprint, request, jsonify
 

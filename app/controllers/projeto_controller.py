@@ -13,9 +13,11 @@ def create_projeto(data: dict):
 
     projeto = Projeto(**data)
     projeto.save()
+    print(projeto)
+    print(processo)
 
     processo.projetos.append(ObjectId(projeto.id))
-    processo.update({'projetos': processo.projetos, 'data_encerramento': processo.data_encerramento})
+    processo.update({'projetos': processo.projetos, 'data_encerramento': processo.data_encerramento, 'id': processo.id})
 
     return {
         'message': f'Projeto created successfully with id {projeto.id}',
@@ -48,7 +50,8 @@ def get_projeto(id: str):
 
 def get_all_projetos():
     projetos = Projeto.get_all()
-    return jsonify([projeto.dict() for projeto in projetos])
+    projetos = [projeto.dict() for projeto in projetos]
+    return projetos
 
 def delete_projeto(data: dict):
     token = data.headers.get('Authorization').split(' ')[1]

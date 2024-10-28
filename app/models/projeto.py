@@ -3,16 +3,19 @@ from typing import List, Optional
 from models.processo_seletivo import ProcessoSeletivo
 from models.professor import Professor 
 from bson import ObjectId
+from database import init_db
 
 class Projeto(BaseModel):
     id: Optional[str] = None
     processo_seletivo: str = Field(..., title="Processo Seletivo", description="Processo Seletivo's ObjectId")
+    titulo: str = Field('Projeto não nomeado', title="Título", description="Título do projeto")
     professor: str = Field(..., title="Professor", description="Professor's ObjectId")
     temas: List[str]
     descricao: str
+    aplicacoes: Optional[List[str]] = Field([], title="Aplicações", description="Aplicações do projeto")
 
-    def __init__(self, processo_seletivo: str, professor: str, temas: List[str], descricao: str):
-        super().__init__(processo_seletivo=processo_seletivo, professor=professor, temas=temas, descricao=descricao)
+    def __init__(self, processo_seletivo: str, professor: str, temas: List[str], descricao: str, aplicacoes: Optional[List[str]] = [], titulo: str = 'Projeto não nomeado', id: Optional[str] = None):
+        super().__init__(processo_seletivo=processo_seletivo, professor=professor, temas=temas, descricao=descricao, aplicacoes=aplicacoes, titulo=titulo, id=id)
         self.processo_seletivo = processo_seletivo
         self.professor = professor
         self.temas = temas
@@ -37,9 +40,10 @@ class Projeto(BaseModel):
     @classmethod
     def get_all(cls):
         db = init_db()
-        projetos = db.projetos.find()
+        projetos = list(db.projetos.find())
         for projeto in projetos:
             projeto['_id'] = str(projeto['_id'])
+            projeto.pop('_id')
 
         projetos = [cls(**projeto) for projeto in projetos]
         return projetos 

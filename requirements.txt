@@ -21,3 +21,5 @@ pydantic
 flask_jwt_extended
 streamlit 
 pinecone 
+boto3
+pypdf2

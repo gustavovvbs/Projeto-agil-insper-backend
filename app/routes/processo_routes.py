@@ -15,7 +15,9 @@ def create():
         formato:
         {
             "data_encerramento": "YYYY-MM-DD",
-            "projetos": ["id do projeto 1", "id do projeto 2"] | None (a requisicao p criar quase sempre n vai ter nd pq os professores vao botar dps)
+            "projetos": ["id do projeto 1", "id do projeto 2"] | [] (a requisicao p criar quase sempre n vai ter nd pq os professores vao botar dps),
+            "titulo": "titulo do processo",
+
         }
     """
 

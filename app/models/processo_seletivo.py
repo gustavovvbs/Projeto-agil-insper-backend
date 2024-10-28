@@ -8,10 +8,10 @@ class ProcessoSeletivo(BaseModel):
     id: Optional[str] = None
     titulo: str = Field("Processo não nomeado", title="Título", description="Título do processo seletivo")
     data_encerramento: datetime = Field(..., title="Data de Encerramento", description="Data de encerramento do processo seletivo")
-    projetos: Optional[List[str]] = Field(None, title="Projetos", description="Projetos do processo seletivo")
+    projetos: Optional[List[str]] = Field([], title="Projetos", description="Projetos do processo seletivo")
 
-    def __init__(self, data_encerramento: datetime, projetos: Optional[List[str]] = None, id: Optional[str] = None):
-        super().__init__(data_encerramento=data_encerramento, projetos=projetos)
+    def __init__(self, data_encerramento: datetime, titulo:str,  projetos: Optional[List[str]] = [], id: Optional[str] = None):
+        super().__init__(data_encerramento=data_encerramento, projetos=projetos, titulo=titulo)
   
     def save(self):
         db = init_db()
@@ -21,7 +21,8 @@ class ProcessoSeletivo(BaseModel):
 
         self.id = str(db.processos_seletivos.insert_one({
             'data_encerramento': self.data_encerramento,
-            'projetos': self.projetos
+            'projetos': self.projetos,
+            'titulo': self.titulo
         }).inserted_id)
 
 

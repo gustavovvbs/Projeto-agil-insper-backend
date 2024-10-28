@@ -16,6 +16,8 @@ def register_user(data):
     curso = data.get('curso')
     semestre = data.get('semestre')
     nome = data.get('nome')
+    area_pesquisa = data.get('area_pesquisa')
+    descricao = data.get('descricao')
     
     if not email or not password or not role or not nome:
         return jsonify({"error": f"missing fields"}), 400
@@ -29,6 +31,9 @@ def register_user(data):
     elif role == 'coordenador':
         coordenador = Coordenador(nome, email)
         coordenador.save()
+    if role == 'professor':
+        professor = Professor(nome, email, area_pesquisa, descricao)
+        professor.save()
     
     hashed_password = generate_password_hash(password)
     user = User(email, hashed_password, role)
