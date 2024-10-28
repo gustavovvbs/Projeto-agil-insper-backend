@@ -11,7 +11,7 @@ class ProcessoSeletivo(BaseModel):
     projetos: Optional[List[str]] = Field([], title="Projetos", description="Projetos do processo seletivo")
 
     def __init__(self, data_encerramento: datetime, titulo:str,  projetos: Optional[List[str]] = [], id: Optional[str] = None):
-        super().__init__(data_encerramento=data_encerramento, projetos=projetos, titulo=titulo)
+        super().__init__(data_encerramento=data_encerramento, projetos=projetos, titulo=titulo, id=id)
   
     def save(self):
         db = init_db()
@@ -44,6 +44,11 @@ class ProcessoSeletivo(BaseModel):
         processo['id'] = str(processo['_id'])
         #popando o _id pq n ta no modelo
         processo.pop('_id')
+
+        #p garantir em caso de por algum motivo ter salvo como objectid
+        for projeto in processo['projetos']:
+            projeto = str(projeto)
+
         return cls(**processo) if processo else None
 
     @staticmethod
@@ -55,6 +60,7 @@ class ProcessoSeletivo(BaseModel):
                 'projetos': data['projetos']
             }
         })
+
         
     def delete(self):
         db = init_db()

@@ -34,4 +34,4 @@ def create_aplicacao(data: dict):
 
     aplicacao.save()
 
-    return {"message": f"Aplicação criada com sucesso com id{aplicacao.id} ", "status": 201}
+    return {"message": f"Aplicação criada com sucesso com id{aplicacao.id} "} , 201

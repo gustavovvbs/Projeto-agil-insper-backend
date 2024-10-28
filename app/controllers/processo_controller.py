@@ -6,7 +6,7 @@ from utils.auth_decorator import role_required
 def create_processo(data: dict):
     processo = ProcessoSeletivo(**data)
     processo.save()
-    return processo
+    return {"message": f"Processo created successfully with id {processo.id}"}, 201
 
 def update_processo(data: dict):
     processo = ProcessoSeletivo.get_by_id(data['id'])
@@ -19,7 +19,7 @@ def update_processo(data: dict):
     updated_processo = updated_processo.dict()
     updated_processo['id'] = data['id']
 
-    return ProcessoSeletivo.get_by_id(data['id'])
+    return {'message': f'Processo updated successfully with id {data["id"]}'}, 201
 
 def get_all_processos():
     processos = ProcessoSeletivo.get_all()
@@ -32,7 +32,7 @@ def get_processo_by_id(id: str):
 def delete_processo(id: str):
     processo = ProcessoSeletivo.get_by_id(id)
     processo.delete()
-    return processo
+    return {'message': f'Processo deleted successfully with id {id}'}, 200
 
 
 

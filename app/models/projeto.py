@@ -42,7 +42,7 @@ class Projeto(BaseModel):
         db = init_db()
         projetos = list(db.projetos.find())
         for projeto in projetos:
-            projeto['_id'] = str(projeto['_id'])
+            projeto['id'] = str(projeto['_id'])
             projeto.pop('_id')
 
         projetos = [cls(**projeto) for projeto in projetos]

@@ -13,16 +13,11 @@ def create_projeto(data: dict):
 
     projeto = Projeto(**data)
     projeto.save()
-    print(projeto)
-    print(processo)
 
-    processo.projetos.append(ObjectId(projeto.id))
-    processo.update({'projetos': processo.projetos, 'data_encerramento': processo.data_encerramento, 'id': processo.id})
+    processo.projetos.append(str(projeto.id))
+    processo.update({'projetos': processo.projetos, 'data_encerramento': processo.data_encerramento, 'id': projeto.processo_seletivo})
 
-    return {
-        'message': f'Projeto created successfully with id {projeto.id}',
-        'status': 201
-    }
+    return {'message': f'Projeto created successfully with id {projeto.id}'}, 201
 
 def update_projeto(data: dict):
     token = data.headers.get('Authorization').split(' ')[1]
@@ -40,9 +35,7 @@ def update_projeto(data: dict):
     #temq fazer o type check no router antes de mandar pra ca 
     projeto.update(data)
 
-    return {
-        'message': f'Projeto updated successfully with id {projeto.id}'
-        }, 200
+    return {'message': f'Projeto updated successfully with id {projeto.id}'} , 201
 
 def get_projeto(id: str):
     projeto = Projeto.get_by_id(id)
@@ -68,9 +61,7 @@ def delete_projeto(data: dict):
 
     projeto.delete()
 
-    return {
-        'message': f'Projeto deleted successfully with id {projeto.id}'
-        }, 200
+    return {'message': f'Projeto deleted successfully with id {projeto.id}'} , 200
 
 
 

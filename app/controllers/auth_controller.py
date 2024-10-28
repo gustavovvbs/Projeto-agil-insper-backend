@@ -20,7 +20,7 @@ def register_user(data):
     descricao = data.get('descricao')
     
     if not email or not password or not role or not nome:
-        return jsonify({"error": f"missing fields"}), 400
+        return {}
 
     if User.find_by_email(email):
         return jsonify({"error": "User already exists"}), 400

@@ -37,7 +37,8 @@ class Aplicacao(BaseModel):
         db = init_db()
         aplicacoes = db.aplicacoes.find()
         for aplicacao in aplicacoes:
-            aplicacao['_id'] = str(aplicacao['_id'])
+            aplicacao['id'] = str(aplicacao['_id'])
+            aplicacao.pop('_id')
 
         aplicacoes = [cls(**aplicacao) for aplicacao in aplicacoes]
         return aplicacoes
