@@ -34,8 +34,11 @@ class Projeto(BaseModel):
     def get_by_id(cls, id: str):
         db = init_db()
         projeto = db.projetos.find_one({'_id': ObjectId(id)})
-        projeto['_id'] = str(projeto['_id'])
-        return cls(**projeto) if projeto else None
+        if not projeto:
+            return None
+        projeto['id'] = str(projeto['_id'])
+        projeto.pop('_id')
+        return cls(**projeto)
 
     @classmethod
     def get_all(cls):
@@ -50,12 +53,14 @@ class Projeto(BaseModel):
 
     def update(self, data):
         db = init_db()
-        db.projetos.update_one({'_id': self.id}, {
+        
+        db.projetos.update_one({'_id': ObjectId(self.id)}, {
             '$set': {
                 'processo_seletivo': data['processo_seletivo'],
                 'professor': data['professor'],
                 'temas': data['temas'],
-                'descricao': data['descricao']
+                'descricao': data['descricao'],
+                'aplicacoes': data['aplicacoes']
             }
         })
 

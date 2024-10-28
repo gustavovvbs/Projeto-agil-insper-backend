@@ -46,7 +46,7 @@ def update(id):
     data['id'] = id
     response = update_processo(data)
 
-    return jsonify(response.dict())
+    return jsonify(response[0]), response[1]
 
 @processo_routes.route('/', methods=['DELETE'])
 @role_required('coordenador')

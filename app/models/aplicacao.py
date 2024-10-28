@@ -3,7 +3,9 @@ from models.professor import Professor
 from typing import List, Optional
 from models.processo_seletivo import ProcessoSeletivo
 from models.estudante import Estudante
+from models.projeto import Projeto 
 from database import init_db
+from bson import ObjectId
 
 class Aplicacao(BaseModel):
     id: Optional[str] = None
@@ -13,12 +15,12 @@ class Aplicacao(BaseModel):
     processo_seletivo: str = Field(..., title="Processo Seletivo", description="Processo Seletivo's ObjectId")
     estudante_lattes: str = Field(None, title="Estudante Lattes", description="Estudante's Lattes URL")
     
-    def __init__(self, pdf_url: str, estudante: Estudante, projeto: str, processo_seletivo: str, estudante_lattes: str = None, id: Optional[str] = None):
+    def __init__(self, pdf_url: str, estudante: str, projeto: str, processo_seletivo: str, estudante_lattes: str = None, id: Optional[str] = None):
         super().__init__(pdf_url=pdf_url, estudante=estudante, projeto=projeto, processo_seletivo=processo_seletivo, estudante_lattes=estudante_lattes, id=id)
-     
 
     def save(self):
         db = init_db()
+
         self.id = str(db.aplicacoes.insert_one({
             'pdf_url': self.pdf_url,
             'estudante': self.estudante,
@@ -26,6 +28,8 @@ class Aplicacao(BaseModel):
             'processo_seletivo': self.processo_seletivo,
             'estudante_lattes': self.estudante_lattes
         }).inserted_id)
+
+        return {"message": f"Aplicação saved successfully with id {self.id}"}, 201
         
 
     @classmethod
@@ -46,6 +50,21 @@ class Aplicacao(BaseModel):
 
         aplicacoes = [cls(**aplicacao) for aplicacao in aplicacoes]
         return aplicacoes
+
+    @classmethod
+    def get_by_professor(cls, professor: str):
+        db = init_db()
+        projetos_professor = list(db.projetos.find({"professor": professor}))
+        projetos_professor = [str(proj["_id"]) for proj in projetos_professor]
+
+        aplicacoes_professor = list(db.aplicacoes.find({"projeto": {"$in": projetos_professor}}))       
+
+        for aplicacao in aplicacoes_professor:
+            aplicacao['id'] = str(aplicacao['_id'])
+            aplicacao.pop('_id')
+
+        return [cls(**aplicacao) for aplicacao in aplicacoes_professor]
+        
 
     @staticmethod
     def update(data):

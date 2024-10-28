@@ -1,4 +1,5 @@
 from database import init_db
+from bson import ObjectId
 
 db = init_db()
 
@@ -20,5 +21,10 @@ class User:
     @staticmethod 
     def find_by_email(email):
         user = db.users.find_one({"email": email})
+        return user if user else None
+
+    @staticmethod
+    def get_by_id(id):
+        user = db.users.find_one({"_id": ObjectId(id)})
         return user if user else None
 
