@@ -4,7 +4,8 @@ from models.aplicacao import Aplicacao
 from models.professor import Professor 
 from models.estudante import Estudante 
 from models.processo_seletivo import ProcessoSeletivo 
-from controllers.aplicacao_controller import create_aplicacao
+from controllers.aplicacao_controller import create_aplicacao, get_all_aplicacoes
+from utils.jwt_auth import decode_jwt_token
 from utils.auth_decorator import role_required 
 
 aplicacao_routes = Blueprint('aplicacao', __name__)
@@ -16,16 +17,28 @@ def create():
         Criar uma aplicacao.
         Permissionamento: estudante 
 
-        Request Body:
+        form data:
             {
-                "id_estudante": "id do estudante",
-                "id_processo": "id do processo seletivo",
-                "id_professor": "id do professor",
-                "l
+                "estudante": "id do estudante",
+                "projeto": "id do projeto",
+                "processo_seletivo": "id do processo seletivo",
+                "estudante_lattes": "link do lattes do aluno",
+                "aplicacao_pdf": pdf da aplicacao
+
             }
 
     """
-    data = request.get_json()
-    response = create_aplicacao(data)
+
+    response = create_aplicacao(request)
 
     return response
+
+@aplicacao_routes.route('/' , methods=['GET'])
+@role_required(['coordenador'])
+def get_all():
+    """
+        Retorna todas as aplicacoes.
+    """
+    aplicacoes = get_all_aplicacoes()
+    return jsonify(aplicacoes)
+
