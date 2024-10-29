@@ -21,10 +21,20 @@ def create_projeto(data: dict):
     return {'message': f'Projeto created successfully with id {projeto.id}'}, 201
 
 def update_projeto(data: dict, id: str):
+    token = data['token']
+    payload = decode_jwt_token(token)
+
+    if payload['role'] == 'professor' and projeto.professor != payload['user_id']:
+        return {'error': 'You do not have permission to update this project'}, 403
+
+    if payload['role'] != 'coordenador':
+        return {'error': 'You do not have permission to update this project'}, 403
+
     projeto = Projeto.get_by_id(id)
     if not projeto:
         return {'error': 'Projeto does not exists'}, 400
 
+    
     data['id'] = id
     response = projeto.update_by_id(data)
 

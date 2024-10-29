@@ -15,9 +15,7 @@ class Aplicacao(BaseModel):
     processo_seletivo: str = Field(..., title="Processo Seletivo", description="Processo Seletivo's ObjectId")
     estudante_lattes: str = Field(None, title="Estudante Lattes", description="Estudante's Lattes URL")
     
-    def __init__(self, pdf_url: str, estudante: str, projeto: str, processo_seletivo: str, estudante_lattes: str = None, id: Optional[str] = None):
-        super().__init__(pdf_url=pdf_url, estudante=estudante, projeto=projeto, processo_seletivo=processo_seletivo, estudante_lattes=estudante_lattes, id=id)
-
+    
     def save(self):
         db = init_db()
 

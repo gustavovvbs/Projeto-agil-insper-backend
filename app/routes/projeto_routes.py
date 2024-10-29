@@ -50,16 +50,17 @@ def update(id):
     #ver c o thiagao se eh suave deixa essa autenticacao aq pela peculiaridade dessa checagem de ownnership
     data = request.get_json()
     token = request.headers.get('Authorization').split(' ')[1]
+    data['token'] = token
 
-    user_data = decode_jwt_token(token)
+    # user_data = decode_jwt_token(token)
 
-    user_id = ObjectId(user_data['user_id'])
+    # user_id = ObjectId(user_data['user_id'])
 
-    if user_data['role'] == 'professor' and projeto.professor != user_id:
-        return {'error': 'You do not have permission to update this project'}, 40
-    #se for coordenador ou o dono do projeto pd editar
-    if user_data['role'] == 'coordenador' or projeto.professor == user_id:
-        response = update_projeto(data, id)
+    # if user_data['role'] == 'professor' and projeto.professor != user_id:
+    #     return {'error': 'You do not have permission to update this project'}, 40
+    # #se for coordenador ou o dono do projeto pd editar
+    # if user_data['role'] == 'coordenador' or projeto.professor == user_id:
+    response = update_projeto(data, id)
     return jsonify(response)
 
 @projeto_routes.route('/<id>', methods=['GET'])
