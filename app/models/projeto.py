@@ -7,19 +7,12 @@ from database import init_db
 
 class Projeto(BaseModel):
     id: Optional[str] = None
-    processo_seletivo: str = Field(..., title="Processo Seletivo", description="Processo Seletivo's ObjectId")
+    processo_seletivo: Optional[str] = Field(..., title="Processo Seletivo", description="Processo Seletivo's ObjectId")
     titulo: str = Field('Projeto não nomeado', title="Título", description="Título do projeto")
-    professor: str = Field(..., title="Professor", description="Professor's ObjectId")
+    professor: Optional[str] = Field(..., title="Professor", description="Professor's ObjectId")
     temas: List[str]
-    descricao: str
+    descricao: Optional[str]
     aplicacoes: Optional[List[str]] = Field([], title="Aplicações", description="Aplicações do projeto")
-
-    def __init__(self, processo_seletivo: str, professor: str, temas: List[str], descricao: str, aplicacoes: Optional[List[str]] = [], titulo: str = 'Projeto não nomeado', id: Optional[str] = None):
-        super().__init__(processo_seletivo=processo_seletivo, professor=professor, temas=temas, descricao=descricao, aplicacoes=aplicacoes, titulo=titulo, id=id)
-        self.processo_seletivo = processo_seletivo
-        self.professor = professor
-        self.temas = temas
-        self.descricao = descricao
 
     def save(self):
         db = init_db()
@@ -51,18 +44,24 @@ class Projeto(BaseModel):
         projetos = [cls(**projeto) for projeto in projetos]
         return projetos 
 
-    def update(self, data):
+    
+    @classmethod 
+    def update_by_id(cls, data):
         db = init_db()
+
+        projeto = cls.get_by_id(data['id'])
+        if not projeto:
+            return {"message": "Projeto not found"}, 404
         
-        db.projetos.update_one({'_id': ObjectId(self.id)}, {
-            '$set': {
-                'processo_seletivo': data['processo_seletivo'],
-                'professor': data['professor'],
-                'temas': data['temas'],
-                'descricao': data['descricao'],
-                'aplicacoes': data['aplicacoes']
-            }
+        update_data = {k: v for k, v in data.items() if v is not None and k != 'id'}
+        result = db.projetos.update_one({'_id': ObjectId(data['id'])}, {
+            '$set': update_data
         })
+
+        if result.modified_count == 0:
+            return {"message": "No changes made"}, 200
+
+        return {"message": "Projeto updated successfully"}, 200
 
     def delete(self):
         db = init_db()

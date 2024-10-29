@@ -10,8 +10,6 @@ class ProcessoSeletivo(BaseModel):
     data_encerramento: datetime = Field(..., title="Data de Encerramento", description="Data de encerramento do processo seletivo")
     projetos: Optional[List[str]] = Field([], title="Projetos", description="Projetos do processo seletivo")
 
-    def __init__(self, data_encerramento: datetime, titulo:str,  projetos: Optional[List[str]] = [], id: Optional[str] = None):
-        super().__init__(data_encerramento=data_encerramento, projetos=projetos, titulo=titulo, id=id)
   
     def save(self):
         db = init_db()
@@ -26,8 +24,8 @@ class ProcessoSeletivo(BaseModel):
         }).inserted_id)
 
 
-    @staticmethod
-    def get_all():
+    @classmethod
+    def get_all(cls):
         db = init_db()
         processos = list(db.processos_seletivos.find())
         for processo in processos:
@@ -35,6 +33,8 @@ class ProcessoSeletivo(BaseModel):
             #popando o _id pq n ta no modelo
             processo.pop('_id')
 
+
+        processos = [cls(**processo) for processo in processos]
         return processos
 
     @classmethod
@@ -51,16 +51,24 @@ class ProcessoSeletivo(BaseModel):
 
         return cls(**processo) if processo else None
 
-    @staticmethod
-    def update(data):
+    @classmethod
+    def update(cls, data):
         db = init_db()
-        db.processos_seletivos.update_one({'_id': ObjectId(data['id'])}, {
-            '$set': {
-                'data_encerramento': data['data_encerramento'],
-                'projetos': data['projetos']
-            }
+
+        processo = cls.get_by_id(data['id'])
+        if not processo:
+            return {"message": "Processo Seletivo not found"}, 404
+
+        update_data = {k: v for k, v in data.items() if v is not None and k != 'id'}
+
+        response = db.processos_seletivos.update_one({'_id': ObjectId(data['id'])}, {
+            '$set': update_data
         })
 
+        if response.modified_count == 0:
+            return {"message": "No changes were made"}, 400
+
+        return {"message": f"Processo Seletivo updated successfully with id {data['id']}"}, 201
         
     def delete(self):
         db = init_db()

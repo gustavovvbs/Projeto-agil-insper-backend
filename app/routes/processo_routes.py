@@ -40,11 +40,10 @@ def get_all():
     return jsonify(response)
 
 @processo_routes.route('/<id>', methods=['PUT'])
-@role_required('coordenador')
+@role_required(['coordenador'])
 def update(id):
     data = request.get_json()
-    data['id'] = id
-    response = update_processo(data)
+    response = update_processo_by_id(data, id)
 
     return jsonify(response[0]), response[1]
 

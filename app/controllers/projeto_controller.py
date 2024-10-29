@@ -15,27 +15,20 @@ def create_projeto(data: dict):
     projeto.save()
 
     processo.projetos.append(str(projeto.id))
+
     processo.update({'projetos': processo.projetos, 'data_encerramento': processo.data_encerramento, 'id': projeto.processo_seletivo})
 
     return {'message': f'Projeto created successfully with id {projeto.id}'}, 201
 
-def update_projeto(data: dict):
-    token = data.headers.get('Authorization').split(' ')[1]
-
-    user_data = decode_jwt_token(token)
-    user_id = ObjectId(user_data['user_id'])
-
-    projeto = Projeto.get_by_id(data['id'])
+def update_projeto(data: dict, id: str):
+    projeto = Projeto.get_by_id(id)
     if not projeto:
         return {'error': 'Projeto does not exists'}, 400
 
-    if projeto.professor != user_id:
-        return {'error': 'You do not have permission to update this project'}, 403
+    data['id'] = id
+    response = projeto.update_by_id(data)
 
-    #temq fazer o type check no router antes de mandar pra ca 
-    projeto.update(data)
-
-    return {'message': f'Projeto updated successfully with id {projeto.id}'} , 201
+    return response
 
 def get_projeto(id: str):
     projeto = Projeto.get_by_id(id)

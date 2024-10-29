@@ -1,7 +1,6 @@
 import streamlit as st
 from typing import Optional
-from utils.utils import respond_query
-
+from utils.matchmaking import respond_query, Professor
 
 def main():
     # Streamlit app title

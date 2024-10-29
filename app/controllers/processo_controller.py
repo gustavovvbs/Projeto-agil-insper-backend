@@ -8,21 +8,15 @@ def create_processo(data: dict):
     processo.save()
     return {"message": f"Processo created successfully with id {processo.id}"}, 201
 
-def update_processo(data: dict):
-    processo = ProcessoSeletivo.get_by_id(data['id'])
-    #criando outra instancia p checar a tipagem
-    new_processo = ProcessoSeletivo(**data).dict()
-    new_processo['id'] = data['id']
-    processo.update(new_processo)
+def update_processo_by_id(data: dict, id: str):
+    data['id'] = id
+    response = ProcessoSeletivo.update(data)
 
-    updated_processo = ProcessoSeletivo.get_by_id(data['id'])
-    updated_processo = updated_processo.dict()
-    updated_processo['id'] = data['id']
-
-    return {'message': f'Processo updated successfully with id {data["id"]}'}, 201
+    return response
 
 def get_all_processos():
     processos = ProcessoSeletivo.get_all()
+    processos = [processo.dict() for processo in processos]
     return processos
 
 def get_processo_by_id(id: str):

@@ -30,9 +30,9 @@ def create():
 
     return jsonify(response)
 
-@projeto_routes.route('/', methods=['PUT'])
+@projeto_routes.route('/<id>', methods=['PUT'])
 @role_required(['coordenador', 'professor'])
-def update():
+def update(id):
     """ 
         Atualiza um projeto existente. 
         Permissionamento: coordenador e professor
@@ -44,17 +44,22 @@ def update():
             "temas": ["tema 1", "tema 2"],
             "descricao": "descricao do projeto"
         }
-    """
 
+    """ 
+
+    #ver c o thiagao se eh suave deixa essa autenticacao aq pela peculiaridade dessa checagem de ownnership
     data = request.get_json()
-    try:
-        type_check = Projeto(data['processo_seletivo'], data['professor'], data['temas'], data['descricao'])
-    except TypeError:
-        return jsonify({"error": "Invalid data format"}), 400
-    
-    projeto_data = type_check.dict()
-    response = update_projeto(projeto_data)
+    token = request.headers.get('Authorization').split(' ')[1]
 
+    user_data = decode_jwt_token(token)
+
+    user_id = ObjectId(user_data['user_id'])
+
+    if user_data['role'] == 'professor' and projeto.professor != user_id:
+        return {'error': 'You do not have permission to update this project'}, 40
+    #se for coordenador ou o dono do projeto pd editar
+    if user_data['role'] == 'coordenador' or projeto.professor == user_id:
+        response = update_projeto(data, id)
     return jsonify(response)
 
 @projeto_routes.route('/<id>', methods=['GET'])
