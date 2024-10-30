@@ -44,10 +44,18 @@ def get_projeto(id: str):
     projeto = Projeto.get_by_id(id)
     return jsonify(projeto.dict())
 
+def get_projetos_by_processo(id: str):
+    projetos = Projeto.get_by_processo(id)
+    if not projetos:
+        return {'error': 'Processo does not exists'}, 400
+    
+    projetos = [projeto.dict() for projeto in projetos]
+    return projetos, 200
+
 def get_all_projetos():
     projetos = Projeto.get_all()
     projetos = [projeto.dict() for projeto in projetos]
-    return projetos
+    return projetos, 200
 
 def delete_projeto(data: dict):
     token = data.headers.get('Authorization').split(' ')[1]

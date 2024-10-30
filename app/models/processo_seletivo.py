@@ -23,11 +23,18 @@ class ProcessoSeletivo(BaseModel):
             'titulo': self.titulo
         }).inserted_id)
 
+        if not self.id:
+            return {"message": "Error saving Processo Seletivo"}, 400
+
+        return {"message": f"Processo Seletivo saved successfully with id {self.id}"}, 201
+
 
     @classmethod
     def get_all(cls):
         db = init_db()
         processos = list(db.processos_seletivos.find())
+        if not processos:
+            return None
         for processo in processos:
             processo['id'] = str(processo['_id'])
             #popando o _id pq n ta no modelo
@@ -41,6 +48,8 @@ class ProcessoSeletivo(BaseModel):
     def get_by_id(cls, id: str):
         db = init_db()
         processo = db.processos_seletivos.find_one({'_id': ObjectId(id)})
+        if not processo:
+            return None
         processo['id'] = str(processo['_id'])
         #popando o _id pq n ta no modelo
         processo.pop('_id')

@@ -28,10 +28,9 @@ def create():
 
 @processo_routes.route('/<id>', methods=['GET'])
 def get_by_id(id):
-    id = request.args.get('id')
-    response = get_processo(id)
+    response = get_processo_by_id(id)
 
-    return jsonify(response.dict())
+    return response
 
 @processo_routes.route('/', methods=['GET'])
 def get_all():

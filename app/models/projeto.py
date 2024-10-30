@@ -63,6 +63,18 @@ class Projeto(BaseModel):
 
         return {"message": "Projeto updated successfully"}, 200
 
+    @classmethod
+    def get_by_processo(cls, processo_id: str):
+        db = init_db()
+        projetos = list(db.projetos.find({'processo_seletivo': processo_id}))
+        if not projetos:
+            return None
+        for projeto in projetos:
+            projeto['id'] = str(projeto['_id'])
+            projeto.pop('_id')
+        projetos = [cls(**projeto) for projeto in projetos]
+        return projetos
+
     def delete(self):
         db = init_db()
         db.projetos.delete_one({'_id': self.id})

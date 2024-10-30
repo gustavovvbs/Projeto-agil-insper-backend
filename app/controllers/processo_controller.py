@@ -16,12 +16,18 @@ def update_processo_by_id(data: dict, id: str):
 
 def get_all_processos():
     processos = ProcessoSeletivo.get_all()
+    if not processos:
+        return {'error': 'No processos found'}, 404
     processos = [processo.dict() for processo in processos]
-    return processos
+    return processos, 200
 
 def get_processo_by_id(id: str):
-    processo = ProcessoSeletivo.get_by_id(id)
-    return processo
+    response = ProcessoSeletivo.get_by_id(id)
+    if not response:
+         return {'error': 'Processo not found'}, 404
+         
+
+    return response.dict(), 200
 
 def delete_processo(id: str):
     processo = ProcessoSeletivo.get_by_id(id)

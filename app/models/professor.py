@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field
 from database import init_db
+from bson import ObjectId
 
 class Professor(BaseModel):
     nome: str = Field(..., title="Nome", description="Nome do professor")
@@ -8,9 +9,6 @@ class Professor(BaseModel):
     descricao: str = Field(..., title="Descrição", description="Descrição do professor")
     foto_url: str = Field('', title="URL da Foto", description="URL da foto do professor")
 
-    def __init__(self, nome: str, email: str, area_pesquisa: str, descricao: str):
-        super().__init__(nome=nome, email=email, area_pesquisa=area_pesquisa, descricao=descricao)
-       
 
     def save(self):
         db = init_db()
@@ -21,3 +19,14 @@ class Professor(BaseModel):
             'descricao': self.descricao,
             'foto_url': self.foto_url
         })
+
+    @classmethod
+    def get_by_id(cls, id: str):
+        db = init_db()
+        professor = db.users.find_one({'_id': ObjectId(id)})
+        professor = db.professores.find_one({'email': professor['email']})
+        if not professor:
+            return None
+        professor['id'] = str(professor['_id'])
+        professor.pop('_id')
+        return cls(**professor)

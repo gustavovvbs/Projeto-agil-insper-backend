@@ -3,7 +3,7 @@ from utils.jwt_auth import decode_jwt_token
 from models.projeto import Projeto
 from models.processo_seletivo import ProcessoSeletivo
 from models.professor import Professor
-from controllers.projeto_controller import create_projeto, update_projeto, get_projeto, get_all_projetos, delete_projeto
+from controllers.projeto_controller import create_projeto, update_projeto, get_projeto, get_all_projetos, delete_projeto, get_projetos_by_processo
 from bson import ObjectId
 from flask import Blueprint, request, jsonify
 
@@ -46,20 +46,11 @@ def update(id):
         }
 
     """ 
-
     #ver c o thiagao se eh suave deixa essa autenticacao aq pela peculiaridade dessa checagem de ownnership
     data = request.get_json()
     token = request.headers.get('Authorization').split(' ')[1]
     data['token'] = token
 
-    # user_data = decode_jwt_token(token)
-
-    # user_id = ObjectId(user_data['user_id'])
-
-    # if user_data['role'] == 'professor' and projeto.professor != user_id:
-    #     return {'error': 'You do not have permission to update this project'}, 40
-    # #se for coordenador ou o dono do projeto pd editar
-    # if user_data['role'] == 'coordenador' or projeto.professor == user_id:
     response = update_projeto(data, id)
     return jsonify(response)
 
@@ -84,6 +75,19 @@ def get_all():
     response = get_all_projetos()
 
     return jsonify(response)
+
+@projeto_routes.route('/processo/<id>', methods=['GET'])
+@role_required(['coordenador', 'professor'])
+def get_by_processo(id):
+    """ 
+        Retorna todos os projetos de um processo seletivo. 
+        Permissionamento: coordenador e professor
+    """
+
+    response = get_projetos_by_processo(id)
+    print(response)
+
+    return response
 
 @projeto_routes.route('/', methods=['DELETE'])
 @role_required(['coordenador', 'professor'])
