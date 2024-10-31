@@ -5,7 +5,7 @@ from models.processo_seletivo import ProcessoSeletivo
 from models.professor import Professor
 from controllers.projeto_controller import create_projeto, update_projeto, get_projeto, get_all_projetos, delete_projeto, get_projetos_by_processo
 from bson import ObjectId
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, make_response
 
 projeto_routes = Blueprint('projeto', __name__)
 
@@ -77,17 +77,17 @@ def get_all():
     return jsonify(response)
 
 @projeto_routes.route('/processo/<id>', methods=['GET'])
-@role_required(['coordenador', 'professor'])
+@role_required(['coordenador'])
 def get_by_processo(id):
     """ 
         Retorna todos os projetos de um processo seletivo. 
         Permissionamento: coordenador e professor
     """
 
+  
     response = get_projetos_by_processo(id)
-    print(response)
 
-    return response
+    return jsonify(response)
 
 @projeto_routes.route('/', methods=['DELETE'])
 @role_required(['coordenador', 'professor'])

@@ -19,7 +19,7 @@ def get_all_processos():
     if not processos:
         return {'error': 'No processos found'}, 404
     processos = [processo.dict() for processo in processos]
-    return processos, 200
+    return processos
 
 def get_processo_by_id(id: str):
     response = ProcessoSeletivo.get_by_id(id)

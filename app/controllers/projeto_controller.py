@@ -42,20 +42,27 @@ def update_projeto(data: dict, id: str):
 
 def get_projeto(id: str):
     projeto = Projeto.get_by_id(id)
-    return jsonify(projeto.dict())
+    if not projeto:
+        return {'error': 'Projeto does not exists'}, 400
+        
+    return projeto.dict()
 
 def get_projetos_by_processo(id: str):
     projetos = Projeto.get_by_processo(id)
     if not projetos:
+        return {'error': 'No projects found for this process'}, 404
+
+    if projetos == None:
         return {'error': 'Processo does not exists'}, 400
     
     projetos = [projeto.dict() for projeto in projetos]
-    return projetos, 200
+
+    return projetos
 
 def get_all_projetos():
     projetos = Projeto.get_all()
     projetos = [projeto.dict() for projeto in projetos]
-    return projetos, 200
+    return projetos
 
 def delete_projeto(data: dict):
     token = data.headers.get('Authorization').split(' ')[1]

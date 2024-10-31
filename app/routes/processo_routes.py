@@ -24,7 +24,7 @@ def create():
     data = request.get_json()
     response = create_processo(data)
 
-    return jsonify(response.dict())
+    return jsonify(response)
 
 @processo_routes.route('/<id>', methods=['GET'])
 def get_by_id(id):

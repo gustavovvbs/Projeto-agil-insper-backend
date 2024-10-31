@@ -27,6 +27,21 @@ def upload_to_s3(file):
         raise Exception(e)
 
 def create_aplicacao(data: dict):
+    """
+        Criar uma aplicacao.
+        Permissionamento: estudante 
+
+        form data:
+            {
+                "estudante": "id do estudante",
+                "projeto": "id do projeto",
+                "processo_seletivo": "id do processo seletivo",
+                "estudante_lattes": "link do lattes do aluno",
+                "aplicacao_pdf": pdf da aplicacao
+
+            }
+
+    """
     file = data.files['aplicacao_pdf']
     projeto_id = data.form['projeto']
     estudante_id = data.form['estudante']
@@ -46,6 +61,7 @@ def create_aplicacao(data: dict):
     processo = ProcessoSeletivo.get_by_id(processo_id)
     if not processo:
         return {'error': 'Processo Seletivo does not exist'}, 400
+
 
     pdf_url = upload_to_s3(file)
 

@@ -20,7 +20,8 @@ class Projeto(BaseModel):
             'processo_seletivo': self.processo_seletivo,
             'professor': self.professor,
             'temas': self.temas,
-            'descricao': self.descricao
+            'descricao': self.descricao,
+            'titulo': self.titulo,
         }).inserted_id)
 
     @classmethod
@@ -74,6 +75,26 @@ class Projeto(BaseModel):
             projeto.pop('_id')
         projetos = [cls(**projeto) for projeto in projetos]
         return projetos
+
+    @classmethod
+    def update(cls, data):
+        db = init_db()
+
+        projeto = cls.get_by_id(data['id'])
+        if not projeto:
+            return {"message": "Projeto not found"}, 404
+
+        update_data = {k: v for k, v in data.items() if v is not None and k != 'id'}
+
+        response = db.projetos.update_one({'_id': ObjectId(data['id'])}, {
+            '$set': update_data
+        })
+
+        if response.modified_count == 0:
+            return {"message": "No changes were made"}, 400
+
+        return {"message": f"Projeto updated successfully with id {data['id']}"}, 201
+
 
     def delete(self):
         db = init_db()

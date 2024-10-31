@@ -14,24 +14,7 @@ aplicacao_routes = Blueprint('aplicacao', __name__)
 @aplicacao_routes.route('/', methods=['POST'])
 @role_required(['estudante'])
 def create():
-    """
-        Criar uma aplicacao.
-        Permissionamento: estudante 
-
-        form data:
-            {
-                "estudante": "id do estudante",
-                "projeto": "id do projeto",
-                "processo_seletivo": "id do processo seletivo",
-                "estudante_lattes": "link do lattes do aluno",
-                "aplicacao_pdf": pdf da aplicacao
-
-            }
-
-    """
-
     response = create_aplicacao(request)
-
     return response
 
 @aplicacao_routes.route('/' , methods=['GET'])
