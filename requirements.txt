@@ -9,6 +9,7 @@ langchain_openai
 langchain-community
 langchain-pinecone
 uvicorn
+gunicorn
 pinecone-client 
 flask 
 langchain-core
