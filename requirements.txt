@@ -23,3 +23,4 @@ streamlit
 pinecone 
 boto3
 pypdf2
+flask_cors
