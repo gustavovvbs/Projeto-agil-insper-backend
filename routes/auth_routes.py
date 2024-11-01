@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, Blueprint
 from models import coordenador, estudante, professor, user 
-from controllers.auth_controller import register_user, login_user, create_token_and_send_email
+from controllers.auth_controller import register_user, login_user
 from utils.auth_decorator import role_required
 
 
