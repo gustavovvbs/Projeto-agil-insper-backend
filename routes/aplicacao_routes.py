@@ -49,27 +49,6 @@ def get_by_professor():
 
     return jsonify(aplicacoes), 200
 
-@aplicacao_routes.route('/projeto', methods=['GET'])
-@role_required(['professor'])
-def get_by_professor():
-    """
-        Retorna todas as aplicacoes de um professor.
-        Permissionamento: professor
-    """
-    token = request.headers.get('Authorization').split(' ')[1]
-    payload = decode_jwt_token(token)
-    if payload['role'] != 'professor':
-        return jsonify({"error": "Unauthorized."}), 401
-    
-    aplicacoes = get_aplicacao_by_professor(payload['user_id'])
-    date_check = check_processo_date(aplicacoes)
-    if not date_check:
-        return {"error": "Proccess still open"}, 400 
-    
-    if isinstance(date_check, dict):
-        return jsonify(date_check), 400
-
-    return jsonify(aplicacoes), 200
 
     
 
