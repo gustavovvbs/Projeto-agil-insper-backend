@@ -42,11 +42,11 @@ class ImportantEmailsProfessor:
     def gather_important_professor_dates():
         # a gente vai ter um sistema de propostas? "Os professores recebem quando o prazo para avaliação das propostas (aprovar/reprovar) está chegando ao fim."
         return None
-    
+    @staticmethod
     def send_email_professor(important_process, emails):
         for process in important_process:
             mail.send_message(
-                subject = "O prazo está chegando ao fim",
+                subject = "O prazo está chegando ao fim"
             )
         
 
