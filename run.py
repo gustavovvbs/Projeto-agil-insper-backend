@@ -11,14 +11,12 @@ from flask_apscheduler import APScheduler
 from flask_cors import CORS
 from flask_mail import Mail
 mail = Mail()
-scheduler = APScheduler()
 def create_app():
     app = Flask(__name__)
     app.config.from_object('config.Config')
     CORS(app)
 
     db = init_db()
-    scheduler.start()
     mail.init_app(app)
     app.register_blueprint(auth_routes, url_prefix='/auth')
     app.register_blueprint(matchmaking_routes, url_prefix='/matchmaking')
