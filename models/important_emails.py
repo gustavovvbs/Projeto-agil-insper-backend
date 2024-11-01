@@ -1,7 +1,6 @@
 from flask import current_app
 from run import mongo 
 from run import mail
-from app import scheduler
 from pymongo import ReturnDocument
 from datetime import timedelta, datetime
 from pytz import timezone
