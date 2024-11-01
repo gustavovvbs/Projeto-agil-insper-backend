@@ -1,11 +1,17 @@
-FROM python:3.9
+FROM python:3.9-slim
 
-WORKDIR /code
+# Set the working directory
+WORKDIR /app
 
-COPY ./requirements.txt /code/requirements.txt
+# Copy requirements.txt and install dependencies
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
 
-RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
+# Copy the rest of the application's code
+COPY . .
 
-COPY . /code
+# Expose the port the app runs on
+EXPOSE 5000
 
-CMD ["gunicorn", "app/run.py:app", "-b", "0.0.0.0:5000", "-w", "4", "--reload"]
+# Run the application
+CMD ["gunicorn", "run:app", "-b", "0.0.0.0:5000", "-w", "4", "--reload"]
