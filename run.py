@@ -10,16 +10,13 @@ from routes.estudante_routes import estudante_routes
 from flask_apscheduler import APScheduler
 from flask_cors import CORS
 from flask_mail import Mail
-from models import important_emails 
 mail = Mail()
-scheduler = APScheduler()
 def create_app():
     app = Flask(__name__)
     app.config.from_object('config.Config')
     CORS(app)
 
     db = init_db()
-    scheduler.start()
     mail.init_app(app)
     app.register_blueprint(auth_routes, url_prefix='/auth')
     app.register_blueprint(matchmaking_routes, url_prefix='/matchmaking')
@@ -28,8 +25,6 @@ def create_app():
     app.register_blueprint(projeto_routes, url_prefix = '/projeto')
     app.register_blueprint(professor_routes, url_prefix = '/professor')
     app.register_blueprint(estudante_routes, url_prefix = '/estudante')
-    scheduler.add_job(important_emails.handle_logic_student, "interval", days=5)
-    scheduler.add_job(important_emails.handle_logic_professor, "interval", days=5)
     return app
 
 app = create_app()
