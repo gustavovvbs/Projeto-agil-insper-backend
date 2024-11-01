@@ -21,14 +21,14 @@ def login():
 
     return response 
 
-@auth_routes.route("/esqueci-senha/<str:idd>", methods=["GET"])
-def retrieve_password(idd):
-    response = create_token_and_send_email(idd)
-    return response
+# @auth_routes.route("/esqueci-senha/<str:idd>", methods=["GET"])
+# def retrieve_password(idd):
+#     response = create_token_and_send_email(idd)
+#     return response
 
 
-@auth_routes.route("/recuperar/<str:token>", methods=["POST"])
-def retrieve_password(token):
-    data = request.get_json()
-    response = create_token_and_send_email(token, data)
-    return response
+# @auth_routes.route("/recuperar/<str:token>", methods=["POST"])
+# def retrieve_password(token):
+#     data = request.get_json()
+#     response = create_token_and_send_email(token, data)
+#     return response
