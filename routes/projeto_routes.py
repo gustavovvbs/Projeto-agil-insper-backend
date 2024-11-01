@@ -3,7 +3,7 @@ from utils.jwt_auth import decode_jwt_token
 from models.projeto import Projeto
 from models.processo_seletivo import ProcessoSeletivo
 from models.professor import Professor
-from controllers.projeto_controller import create_projeto, update_projeto, get_projeto, get_all_projetos, delete_projeto, get_projetos_by_processo
+from controllers.projeto_controller import create_projeto, update_projeto, get_projeto, get_all_projetos, delete_projeto, get_projetos_by_processo, check_processo_date, get_projeto_by_professor
 from bson import ObjectId
 from flask import Blueprint, request, jsonify, make_response
 
@@ -107,3 +107,17 @@ def delete():
 
     return jsonify(response)
 
+@projeto_routes.route('/professor', methods=['GET'])
+@role_required(['professor'])
+def get_by_professor():
+    """
+        Retorna todas as aplicacoes de um professor.
+        Permissionamento: professor
+    """
+    token = request.headers.get('Authorization').split(' ')[1]
+    payload = decode_jwt_token(token)
+    if payload['role'] != 'professor':
+        return jsonify({"error": "Unauthorized."}), 401
+    
+    aplicacoes = get_projeto_by_professor(payload['user_id'])
+    return jsonify(aplicacoes)

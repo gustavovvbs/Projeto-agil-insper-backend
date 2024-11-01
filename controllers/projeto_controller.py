@@ -4,6 +4,7 @@ from models.projeto import Projeto
 from models.processo_seletivo import ProcessoSeletivo
 from models.professor import Professor
 from bson import ObjectId
+import datetime
 
 def create_projeto(data: dict):
     processo = ProcessoSeletivo.get_by_id(data['processo_seletivo'])
@@ -47,6 +48,13 @@ def get_projeto(id: str):
         
     return projeto.dict()
 
+def get_projeto_by_professor(id_professor: str):
+    projeto = Projeto.get_all_by_professors(id_professor=id_professor)
+    if not projeto:
+        return {'error': 'Projeto does not exists'}, 400
+        
+    return [p.dict() for p in projeto]
+
 def get_projetos_by_processo(id: str):
     projetos = Projeto.get_by_processo(id)
     if not projetos:
@@ -81,13 +89,16 @@ def delete_projeto(data: dict):
 
     return {'message': f'Projeto deleted successfully with id {projeto.id}'} , 200
 
+def get_aplicacao_by_projeto(id: str):
+    aplicacoes = Projeto.get_by_professor(id)
+    return [aplicacao.dict() for aplicacao in aplicacoes]
 
+def check_processo_date(data: dict):
+    processo = ProcessoSeletivo.get_by_id(data[0]['processo_seletivo'])
+    if not processo:
+        return {'error': 'Processo Seletivo does not exist'}, 400
 
+    if datetime.datetime.now() < processo.data_encerramento:
+        return False
 
-
-
-
-
-
-
-    
+    return True
