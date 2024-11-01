@@ -93,6 +93,10 @@ def get_aplicacao_by_professor(id: str):
     aplicacoes = Aplicacao.get_by_professor(id)
     return [aplicacao.dict() for aplicacao in aplicacoes]
 
+def get_aplicacao_by_projeto(id: str):
+    aplicacoes = Aplicacao.get_by_projeto(id)
+    return [aplicacao.dict() for aplicacao in aplicacoes]
+
 def get_all_aplicacoes():
     aplicacoes = Aplicacao.get_all()
     return [aplicacao.dict() for aplicacao in aplicacoes]

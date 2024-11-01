@@ -62,6 +62,21 @@ class Aplicacao(BaseModel):
             aplicacao.pop('_id')
 
         return [cls(**aplicacao) for aplicacao in aplicacoes_professor]
+    
+    @classmethod
+    def get_by_projeto(cls, projeto: str):
+        db = init_db()
+        projeto = db.projetos.find_one({"_id": ObjectId(projeto)})
+        aplicacoes = []
+        for id_aplicacao in projeto['aplicacoes']:
+            aplicacoes_projeto = db.aplicacoes.find_one({"_id":ObjectId(id_aplicacao)})
+            aplicacoes.append(aplicacoes_projeto)
+        
+        for aplicacao in aplicacoes:
+            aplicacao['id'] = str(aplicacao['_id'])
+            aplicacao.pop('_id')
+
+        return [cls(**aplicacao) for aplicacao in aplicacoes]
         
 
     @staticmethod
