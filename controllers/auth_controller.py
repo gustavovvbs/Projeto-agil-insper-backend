@@ -5,8 +5,8 @@ from models.estudante import Estudante
 from models.coordenador import Coordenador
 from models.professor import Professor
 from flask import request, jsonify, Blueprint
-from database import init_db
-
+from database import init_db, init_db_temporary_tokens
+from run import mail
 db = init_db()
 
 def register_user(data):
@@ -84,4 +84,19 @@ def login_user(data):
         "status": 200
     }
 
-    
+def create_token_and_send_email(id):
+    user = User.get_by_id(id)
+    user_email = user["email"]
+    role = user["role"]
+    token = create_jwt_token(id,role)
+    url = f"localhost:8000/rescuperar/{token}"
+    mail.send_message(
+        subject="Atualizar senha",
+        body=f"Clique nessa url: {url} para poder mudar de senha",
+        recipient=user_email
+    )
+    db = init_db_temporary_tokens()
+    db.users.insert_one({"user_id": id, "token": token})
+    response = {"message": "url para mudar de senha enviada", "email": user_email}
+    return response, 200
+
