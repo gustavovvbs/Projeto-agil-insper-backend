@@ -14,6 +14,20 @@ BUCKET_NAME = 'bucket-agil'
 
 
 def upload_to_s3(file):
+    """
+    Uploads a file to the specified S3 bucket. 
+
+    Args:
+        file (FileStorage): The file to be uploaded to S3.
+
+    Returns:
+        str: The URL of the uploaded file.
+    
+    Raises:
+        Exception: If the credentials are not available.
+        Exception: If the credentials are partial.
+        Exception: If there is an error uploading the file.
+    """
     try:
         session = boto3.Session()
         s3_client = session.client('s3')
@@ -28,19 +42,13 @@ def upload_to_s3(file):
 
 def create_aplicacao(data: dict):
     """
-        Criar uma aplicacao.
-        Permissionamento: estudante 
+    Creates an application for a project.
 
-        form data:
-            {
-                "estudante": "id do estudante",
-                "projeto": "id do projeto",
-                "processo_seletivo": "id do processo seletivo",
-                "estudante_lattes": "link do lattes do aluno",
-                "aplicacao_pdf": pdf da aplicacao
+    Args:
+        data (dict): The data of the application.
 
-            }
-
+    Returns:
+        dict: The response of the request.
     """
     file = data.files['aplicacao_pdf']
     projeto_id = data.form['projeto']
