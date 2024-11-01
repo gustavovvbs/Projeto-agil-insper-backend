@@ -100,3 +100,14 @@ def create_token_and_send_email(id):
     response = {"message": "url para mudar de senha enviada", "email": user_email}
     return response, 200
 
+def change_password(token, data):
+    db = init_db_temporary_tokens()
+    search = db.users.find_one({"token": token}, {"_id": 0})
+    user_id = search["user_id"]
+    newpassword = data["new_password"]
+    user = user.get_by_id(user_id)
+    hashed_password = generate_password_hash(newpassword)
+    user.password = hashed_password
+    user.save()
+    response = {"message": "senha alterada com sucesso"}
+    return response, 200
