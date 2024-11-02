@@ -28,3 +28,12 @@ class User:
         user = db.users.find_one({"_id": ObjectId(id)})
         return user if user else None
 
+    @staticmethod
+    def put(id, email, password, role):
+        user = db.users.update_one({"_id": ObjectId(id)},{'$set':{'email': email, 'password': password, 'role': role}})
+        return user if user else None
+    
+    @staticmethod
+    def delete(email):
+        user = db.users.delete_one({"email": email})
+        return user if user else None
