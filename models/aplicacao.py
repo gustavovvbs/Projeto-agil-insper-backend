@@ -98,12 +98,13 @@ class Aplicacao(BaseModel):
     def update_all_aplications_from_a_project(data):
         db = init_db()
         if data['status'] == 'aprovado':
-            db.aplicacoes.update_many({'_id': data['id']}, {
+            db.aplicacoes.update_one({'_id': ObjectId(data['id'])}, {
                 '$set': {
                     'status': data['status']
                 }
             })
         else:
+            print('entrou n_aprovado')
             db.aplicacoes.update_many({'projeto': data['projeto']}, {
                 '$set': {
                     'status': data['status']

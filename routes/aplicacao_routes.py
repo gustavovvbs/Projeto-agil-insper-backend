@@ -66,7 +66,7 @@ def get_by_projeto(id_projeto):
 def end_application_process(id_aplicacao,id_projeto):
     reprova_aplicacao(id_projeto)
     aprova_aplicacao(id_aplicacao)
-    return {'message': 'Sucess'}, 200
+    return {'message': 'Success'}, 200
 
     
 

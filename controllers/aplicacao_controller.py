@@ -131,7 +131,7 @@ def check_processo_date(data: dict):
     
 def aprova_aplicacao(id_aprovado: str):
     data = {'status': 'aprovado', 'id':id_aprovado}
-    Aplicacao.update_all_aplications_from_a_project(data, id_aprovado)
+    Aplicacao.update_all_aplications_from_a_project(data)
 
 def reprova_aplicacao(id_projeto: str):
     data = {'status': 'não aprovado', 'projeto':id_projeto}
