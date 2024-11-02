@@ -17,7 +17,14 @@ class User:
         }).inserted_id
 
         return user_id
-
+    
+    @staticmethod
+    def update_password(id, new_password):
+        result = db.users.update_one(
+            {"_id": ObjectId(id)},
+            {"$set": {"password": new_password}}
+        )
+        return result.modified_count > 0
     @staticmethod 
     def find_by_email(email):
         user = db.users.find_one({"email": email})

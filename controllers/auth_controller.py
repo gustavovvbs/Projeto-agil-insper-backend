@@ -6,7 +6,9 @@ from models.coordenador import Coordenador
 from models.professor import Professor
 from flask import request, jsonify, Blueprint
 from database import init_db, init_db_temporary_tokens
-
+from mail import mail
+from flask_mail import Message
+from datetime import datetime, timedelta
 db = init_db()
 
 def register_user(data):
@@ -84,34 +86,69 @@ def login_user(data):
         "status": 200
     }
 
-# def create_token_and_send_email(id):
-#     user = User.get_by_id(id)
-#     user_email = user["email"]
-#     role = user["role"]
-#     token = create_jwt_token(id,role)
-#     url = f"localhost:8000/rescuperar/{token}"
-#     mail.send_message(
-#         subject="Atualizar senha",
-#         body=f"Clique nessa url: {url} para poder mudar de senha",
-#         recipient=user_email
-#     )
-#     db = init_db_temporary_tokens()
-#     db.users.insert_one({"user_id": id, "token": token})
-#     response = {"message": "url para mudar de senha enviada", "email": user_email}
-#     return response, 200
+def create_token_and_send_email(id):
+    user = User.get_by_id(id)  
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+    
+    email = user["email"]  
+    
+    token = create_jwt_token(str(user["_id"]), user['role'], expires_in=3600) 
+    
+    reset_url = f"http://localhost:8000/auth/recuperar/{token}" 
+    
+    try:
+        mail.send_message(
+            subject="Recuperação de Senha",
+            recipients=[email],
+            body=f"""
+            Você solicitou a recuperação de senha.
+            
+            Para redefinir sua senha, clique no link abaixo:
+            {reset_url}
+            
+            Este link expira em 1 hora.
+            
+            Se você não solicitou esta alteração, ignore este email.
+            """
+        )
+        
+        # Store token in temporary collection with expiration
+        temp_db = init_db_temporary_tokens()
+        temp_db.reset_tokens.insert_one({
+            "user_id": user["_id"],
+            "token": token,
+            "created_at": datetime.utcnow(),
+            "expires_at": datetime.utcnow() + timedelta(hours=1)
+        })
+        
+        return jsonify({
+            "message": "Password reset instructions sent to your email",
+            "email": email
+        }), 200
+    except Exception as e:
+        return jsonify({"error": f"Failed to send email: {str(e)}"}), 500
 
-# def change_password(token, data):
-#     db = init_db_temporary_tokens()
-#     search = db.users.find_one({"token": token}, {"_id": 0})
-#     try:
-#         user_id = search["user_id"]
-#         newpassword = data["new_password"]
-#         user = user.get_by_id(user_id)
-#         hashed_password = generate_password_hash(newpassword)
-#         user.password = hashed_password
-#         user.save()
-#         response = {"message": "senha alterada com sucesso"}
-#         return response, 200
-#     except:
-#         response = {"message": "url invalida"}
-#         return response, 400
+def change_password(token, data):
+    if not data or 'new_password' not in data:
+        return jsonify({"error": "New password is required"}), 400
+
+    temp_db = init_db_temporary_tokens()
+    token_record = temp_db.reset_tokens.find_one({
+        "token": token,
+        "expires_at": {"$gt": datetime.utcnow()}
+    })
+    
+    if not token_record:
+        return jsonify({"error": "Invalid or expired reset token"}), 400
+        
+    try:
+        hashed_password = generate_password_hash(data["new_password"])
+        if User.update_password(str(token_record["user_id"]), hashed_password):
+            # Delete used token
+            temp_db.reset_tokens.delete_one({"_id": token_record["_id"]})
+            return jsonify({"message": "Password updated successfully"}), 200
+        else:
+            return jsonify({"error": "Failed to update password"}), 500
+    except Exception as e:
+        return jsonify({"error": f"Failed to update password: {str(e)}"}), 500

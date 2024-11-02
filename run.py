@@ -9,22 +9,38 @@ from routes.professor_routes import professor_routes
 from routes.estudante_routes import estudante_routes
 from flask_apscheduler import APScheduler
 from flask_cors import CORS
-from flask_mail import Mail
-mail = Mail()
+from mail import mail
+from utils.email_service import handle_important_emails
+from datetime import datetime
 def create_app():
     app = Flask(__name__)
     app.config.from_object('config.Config')
     CORS(app)
-
-    db = init_db()
+    
+    # Initialize extensions
     mail.init_app(app)
+    scheduler = APScheduler()
+    scheduler.init_app(app)
+    
+    # Add scheduler job
+    scheduler.add_job(
+        id='send_important_emails',
+        func=handle_important_emails,
+        trigger='interval',
+        days=5,
+        next_run_time = datetime.now()  # Run first time immediately
+    )
+    scheduler.start()
+    
+    # Register blueprints
     app.register_blueprint(auth_routes, url_prefix='/auth')
     app.register_blueprint(matchmaking_routes, url_prefix='/matchmaking')
     app.register_blueprint(processo_routes, url_prefix='/processo')
-    app.register_blueprint(aplicacao_routes, url_prefix = '/aplicacao')
-    app.register_blueprint(projeto_routes, url_prefix = '/projeto')
-    app.register_blueprint(professor_routes, url_prefix = '/professor')
-    app.register_blueprint(estudante_routes, url_prefix = '/estudante')
+    app.register_blueprint(aplicacao_routes, url_prefix='/aplicacao')
+    app.register_blueprint(projeto_routes, url_prefix='/projeto')
+    app.register_blueprint(professor_routes, url_prefix='/professor')
+    app.register_blueprint(estudante_routes, url_prefix='/estudante')
+    
     return app
 
 app = create_app()
