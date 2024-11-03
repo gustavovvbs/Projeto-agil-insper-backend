@@ -10,14 +10,14 @@ auth_tokens = {
     }
 
 def test_create_processo_201():
-    headers = {'Authorization': "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjcxZTkyYTUzY2EzZjEzOWRiODgxYjk2IiwiZXhwIjoxNzMwNzMwMjc3LCJyb2xlIjoiY29vcmRlbmFkb3IifQ.3OS3dZ4vfXatcpdrY1fqtIBY3vNk95UNgQcnZevdWRg"}
+    headers = {'Authorization': auth_tokens['coordinator']}
     data = {"data_encerramento": "2024-11-02","titulo": "processo 4"}
     url = 'https://projeto-agil-insper-backend.onrender.com/processo'
     answer = requests.post(url, headers=headers, json=data)
     assert answer.status_code == 201
 
 def test_create_processo_400():
-    headers = {'Authorization': "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjcxZTkyYTUzY2EzZjEzOWRiODgxYjk2IiwiZXhwIjoxNzMwNzMwMjc3LCJyb2xlIjoiY29vcmRlbmFkb3IifQ.3OS3dZ4vfXatcpdrY1fqtIBY3vNk95UNgQcnZevdWRg"}
+    headers = {'Authorization': auth_tokens['coordinator']}
     data = {}
     url = 'https://projeto-agil-insper-backend.onrender.com/processo'
     answer = requests.post(url, headers=headers, json=data)
@@ -46,7 +46,7 @@ def test_get_all_processos_404():
 
 def test_edit_processos_201():
     url = 'https://projeto-agil-insper-backend.onrender.com/processo/671f811a2e33a765fc56eb7a'
-    headers = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjcxZTkyYTUzY2EzZjEzOWRiODgxYjk2IiwiZXhwIjoxNzMwNzMxMjY0LCJyb2xlIjoiY29vcmRlbmFkb3IifQ.aaelUwtyl-0X7KahZGO_ZsaLlYZXdRLFE91gzzgCbUY'}
+    headers = {'Authorization': auth_tokens['coordinator']}
     data = {"data_encerramento": "2024-10-22"}
     answer = requests.put(url, headers=headers, json=data)
     if answer.status_code == 400:
@@ -56,21 +56,21 @@ def test_edit_processos_201():
 
 def test_edit_processos_403():
     url = 'https://projeto-agil-insper-backend.onrender.com/processo/671f811a2e33a765fc56eb7a'
-    headers = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2vyX2lkIjoiNjcxZTkyYTUzY2EzZjEzOWRiODgxYjk2IiwiZXhwIjoxNzMwNzMxMjY0LCJyb2xlIjoiY29vcmRlbmFkb3IifQ.aaelUwtyl-0X7KahZGO_ZsaLlYZXdRLFE91gzzgCbUY'}
+    headers = {'Authorization': auth_tokens['coordinator']}
     data = {"data_encerramento": "2024-10-22"}
     answer = requests.put(url, headers=headers, json=data)
     assert answer.status_code == 403
 
 def test_edit_processos_400():
     url = 'https://projeto-agil-insper-backend.onrender.com/processo/671f811a2e33a765fc56eb7a'
-    headers = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjcxZTkyYTUzY2EzZjEzOWRiODgxYjk2IiwiZXhwIjoxNzMwNzMxMjY0LCJyb2xlIjoiY29vcmRlbmFkb3IifQ.aaelUwtyl-0X7KahZGO_ZsaLlYZXdRLFE91gzzgCbUY'}
+    headers = {'Authorization': auth_tokens['coordinator']}
     data = {}
     answer = requests.put(url, headers=headers, json=data)
     assert answer.status_code == 400
 
 def test_edit_processos_404():
     url = 'https://projeto-agil-insper-backend.onrender.com/processo/671f811a2e33a765fc56eb7b'
-    headers = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjcxZTkyYTUzY2EzZjEzOWRiODgxYjk2IiwiZXhwIjoxNzMwNzMxMjY0LCJyb2xlIjoiY29vcmRlbmFkb3IifQ.aaelUwtyl-0X7KahZGO_ZsaLlYZXdRLFE91gzzgCbUY'}
+    headers = {'Authorization': auth_tokens['coordinator']}
     data = {"data_encerramento": "2024-10-22"}
     answer = requests.put(url, headers=headers, json=data)
     assert answer.status_code == 404

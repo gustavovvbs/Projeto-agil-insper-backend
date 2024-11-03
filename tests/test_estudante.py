@@ -1,13 +1,4 @@
 import requests
-import os
-from dotenv import load_dotenv
-
-load_dotenv('test_auth_tokens')
-auth_tokens = {
-    "coordinator":os.environ.get("COORDINATOR"),
-    "professor": os.environ.get("PROFESSOR"),
-    "student": os.environ.get("STUDENT")
-    }
 
 def test_get_by_id_student_200():
     headers = {}
