@@ -14,6 +14,7 @@ class Aplicacao(BaseModel):
     projeto: str = Field(..., title="Projeto", description="Projeto's ObjectId")
     processo_seletivo: str = Field(..., title="Processo Seletivo", description="Processo Seletivo's ObjectId")
     estudante_lattes: str = Field(None, title="Estudante Lattes", description="Estudante's Lattes URL")
+    status: str = 'Em análise'
     
     
     def save(self):
@@ -24,7 +25,8 @@ class Aplicacao(BaseModel):
             'estudante': self.estudante,
             'projeto': self.projeto,
             'processo_seletivo': self.processo_seletivo,
-            'estudante_lattes': self.estudante_lattes
+            'estudante_lattes': self.estudante_lattes,
+            'status': self.status
         }).inserted_id)
 
         return {"message": f"Aplicação saved successfully with id {self.id}"}, 201
@@ -87,6 +89,25 @@ class Aplicacao(BaseModel):
                 'pdf_url': data['pdf_url'],
                 'estudante': data['estudante'],
                 'projeto': data['projeto'],
-                'processo_seletivo': data['processo_seletivo']
+                'processo_seletivo': data['processo_seletivo'],
+                'status': data['status']
             }
         })
+    
+    @staticmethod
+    def update_all_aplications_from_a_project(data):
+        db = init_db()
+        if data['status'] == 'aprovado':
+            db.aplicacoes.update_one({'_id': ObjectId(data['id'])}, {
+                '$set': {
+                    'status': data['status']
+                }
+            })
+        else:
+            print('entrou n_aprovado')
+            db.aplicacoes.update_many({'projeto': data['projeto']}, {
+                '$set': {
+                    'status': data['status']
+                }
+            })
+
