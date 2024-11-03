@@ -1,4 +1,13 @@
 import requests
+import os
+from dotenv import load_dotenv
+
+load_dotenv('test_auth_tokens')
+auth_tokens = {
+    "coordinator":os.environ.get("COORDINATOR"),
+    "professor": os.environ.get("PROFESSOR"),
+    "student": os.environ.get("STUDENT")
+    }
 
 def test_create_processo_201():
     headers = {'Authorization': "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjcxZTkyYTUzY2EzZjEzOWRiODgxYjk2IiwiZXhwIjoxNzMwNzMwMjc3LCJyb2xlIjoiY29vcmRlbmFkb3IifQ.3OS3dZ4vfXatcpdrY1fqtIBY3vNk95UNgQcnZevdWRg"}
@@ -66,6 +75,15 @@ def test_edit_processos_404():
     answer = requests.put(url, headers=headers, json=data)
     assert answer.status_code == 404
 
-#falta o delete
+def test_delete_processo_200():
+    headers = {"Authorization": auth_tokens['coordinator']}
+    url = "https://projeto-agil-insper-backend.onrender.com/processo/671f811a2e33a765fc56eb7a"
+    answer = requests.delete(url,headers=headers)
+    assert answer.status_code == 200
 
+def test_delete_processo_404():
+    headers = {"Authorization": auth_tokens['coordinator']}
+    url = "https://projeto-agil-insper-backend.onrender.com/processo/671f811a2e33a765fc56eb7b"
+    answer = requests.delete(url,headers=headers)
+    assert answer.status_code == 404
 

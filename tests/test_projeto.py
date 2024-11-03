@@ -1,10 +1,13 @@
 import requests
-from dotenv import load_dotenv
 import os
-load_dotenv('auth_tokens')
-auth_token = {
-    'professor': os.environ.get("")
-}
+from dotenv import load_dotenv
+
+load_dotenv('test_auth_tokens')
+auth_tokens = {
+    "coordinator":os.environ.get("COORDINATOR"),
+    "professor": os.environ.get("PROFESSOR"),
+    "student": os.environ.get("STUDENT")
+    }
 
 def test_create_projeto_201():
     headers = {"Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjcxZTkyYTUzY2EzZjEzOWRiODgxYjk2IiwiZXhwIjoxNzMwNzMwMjc3LCJyb2xlIjoiY29vcmRlbmFkb3IifQ.3OS3dZ4vfXatcpdrY1fqtIBY3vNk95UNgQcnZevdWRg"}
@@ -41,4 +44,30 @@ def test_get_projeto_by_id_404():
     answer = requests.get(url)
     assert answer.status_code == 404
 
-#falta o edit
+def test_edit_projeto_200():
+    headers = {"Authorization": auth_tokens['professor']}
+    data = {"titulo": "teste de integracao 12312"}
+    url = "https://projeto-agil-insper-backend.onrender.com/projeto/671f927c94f45441faa79453"
+    answer = requests.put(url=url, headers=headers, json=data)
+    assert answer.status_code == 200
+
+def test_edit_projeto_200():
+    headers = {"Authorization": auth_tokens['professor']}
+    data = {}
+    url = "https://projeto-agil-insper-backend.onrender.com/projeto/671f927c94f45441faa79453"
+    answer = requests.put(url=url, headers=headers, json=data)
+    assert answer.status_code == 400
+
+def test_edit_projeto_403():
+    headers = {"Authorization": ""}
+    data = {"titulo": "teste de integracao 12312"}
+    url = "https://projeto-agil-insper-backend.onrender.com/projeto/671f927c94f45441faa79453"
+    answer = requests.put(url=url, headers=headers, json=data)
+    assert answer.status_code == 403
+
+def test_edit_projeto_404():
+    headers = {"Authorization": auth_tokens['professor']}
+    data = {"titulo": "teste de integracao 12312"}
+    url = "https://projeto-agil-insper-backend.onrender.com/projeto/671f927c94f45441faa79452"
+    answer = requests.put(url=url, headers=headers, json=data)
+    assert answer.status_code == 404

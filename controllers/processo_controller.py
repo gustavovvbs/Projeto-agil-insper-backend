@@ -31,6 +31,8 @@ def get_processo_by_id(id: str):
 
 def delete_processo(id: str):
     processo = ProcessoSeletivo.get_by_id(id)
+    if not processo:
+        return {'error': 'Processo not found'}, 404
     processo.delete()
     return {'message': f'Processo deleted successfully with id {id}'}, 200
 

@@ -78,3 +78,5 @@ def test_aprova_aplicacao_403():
     url = "https://projeto-agil-insper-backend.onrender.com/aplicacao/671fc21a6c57e09acfb4b84b/projeto/671f927c94f45441faa79453"
     answer = requests.put(url=url, headers=headers)
     assert answer.status_code == 403
+
+#falta o create aplicação

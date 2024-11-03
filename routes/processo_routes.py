@@ -46,10 +46,9 @@ def update(id):
 
     return jsonify(response[0]), response[1]
 
-@processo_routes.route('/', methods=['DELETE'])
+@processo_routes.route('/<string:id>', methods=['DELETE'])
 @role_required('coordenador')
-def delete():
-    id = request.args.get('id')
+def delete(id):
     response = delete_processo(id)
 
     return jsonify(response.dict())
