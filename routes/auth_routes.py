@@ -1,8 +1,5 @@
-from flask import Flask, request, jsonify, Blueprint
-from models import coordenador, estudante, professor, user 
+from flask import request, Blueprint
 from controllers.auth_controller import register_user, login_user
-from utils.auth_decorator import role_required
-
 
 auth_routes = Blueprint('auth', __name__)
 

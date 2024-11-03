@@ -1,7 +1,4 @@
 from models.processo_seletivo import ProcessoSeletivo
-from datetime import date
-from utils.auth_decorator import role_required
-
 
 def create_processo(data: dict):
     processo = ProcessoSeletivo(**data)

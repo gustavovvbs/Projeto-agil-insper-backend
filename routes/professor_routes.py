@@ -1,11 +1,5 @@
-from utils.auth_decorator import role_required
-from utils.jwt_auth import decode_jwt_token
-from models.projeto import Projeto
-from models.processo_seletivo import ProcessoSeletivo
-from models.professor import Professor
 from controllers.professor_controller import get_by_id, get_all
-from bson import ObjectId
-from flask import Blueprint, request, jsonify
+from flask import Blueprint
 
 professor_routes = Blueprint('professor', __name__)
 

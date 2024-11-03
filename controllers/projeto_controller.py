@@ -1,8 +1,6 @@
-from utils.auth_decorator import role_required
 from utils.jwt_auth import decode_jwt_token
 from models.projeto import Projeto 
 from models.processo_seletivo import ProcessoSeletivo
-from models.professor import Professor
 from bson import ObjectId
 import datetime
 

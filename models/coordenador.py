@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field 
+from pydantic import BaseModel 
 from database import init_db
 
 class Coordenador(BaseModel):

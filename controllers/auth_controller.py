@@ -4,7 +4,7 @@ from models.user import User
 from models.estudante import Estudante
 from models.coordenador import Coordenador
 from models.professor import Professor
-from flask import request, jsonify, Blueprint
+from flask import jsonify
 from database import init_db
 
 db = init_db()

@@ -1,5 +1,4 @@
-from flask import Flask, Blueprint, request, jsonify
-from models.processo_seletivo import ProcessoSeletivo
+from flask import Blueprint, request, jsonify
 from controllers.processo_controller import create_processo, get_processo_by_id, get_all_processos, update_processo_by_id, delete_processo
 from utils.auth_decorator import role_required
 
