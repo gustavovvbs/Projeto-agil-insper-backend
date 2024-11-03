@@ -11,7 +11,9 @@ def create_projeto(data: dict):
 
     if not processo:
         return {'error': 'Processo does not exists'}, 400
-
+    if len(data) != 5:
+        return {'error': 'Bad Request'}, 400
+    
     projeto = Projeto(**data)
     projeto.save()
 

@@ -3,7 +3,7 @@ import requests
 def test_create_processo_201():
     headers = {'Authorization': "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjcxZTkyYTUzY2EzZjEzOWRiODgxYjk2IiwiZXhwIjoxNzMwNzMwMjc3LCJyb2xlIjoiY29vcmRlbmFkb3IifQ.3OS3dZ4vfXatcpdrY1fqtIBY3vNk95UNgQcnZevdWRg"}
     data = {"data_encerramento": "2024-11-02","titulo": "processo 4"}
-    url = 'https://projeto-agil-insper-backend.onrender.com/projeto'
+    url = 'https://projeto-agil-insper-backend.onrender.com/processo'
     answer = requests.post(url, headers=headers, json=data)
     assert answer.status_code == 201
 
@@ -66,7 +66,6 @@ def test_edit_processos_404():
     answer = requests.put(url, headers=headers, json=data)
     assert answer.status_code == 404
 
-def test_delete_processos_201():
-    return
+#falta o delete
 
 

@@ -28,7 +28,7 @@ def create():
     data = request.get_json()
     response = create_projeto(data)
 
-    return jsonify(response)
+    return jsonify(response[0]), response[1]
 
 @projeto_routes.route('/<id>', methods=['PUT'])
 @role_required(['coordenador', 'professor'])
@@ -63,7 +63,7 @@ def get(id: str):
 
     response = get_projeto(id)
 
-    return jsonify(response)
+    return jsonify(response[0]), response[1]
 
 @projeto_routes.route('/', methods=['GET'])
 def get_all():
