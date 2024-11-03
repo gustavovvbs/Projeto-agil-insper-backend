@@ -20,5 +20,3 @@ def get_all_professores():
     response = get_all()
 
     return response
-
-# @professor_routes.route()
