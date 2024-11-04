@@ -4,8 +4,8 @@ from models.user import User
 from models.estudante import Estudante
 from models.coordenador import Coordenador
 from models.professor import Professor
-from flask import request, jsonify, Blueprint
-from database import init_db, init_db_temporary_tokens
+from flask import jsonify
+from database import init_db
 
 db = init_db()
 
@@ -84,34 +84,4 @@ def login_user(data):
         "status": 200
     }
 
-# def create_token_and_send_email(id):
-#     user = User.get_by_id(id)
-#     user_email = user["email"]
-#     role = user["role"]
-#     token = create_jwt_token(id,role)
-#     url = f"localhost:8000/rescuperar/{token}"
-#     mail.send_message(
-#         subject="Atualizar senha",
-#         body=f"Clique nessa url: {url} para poder mudar de senha",
-#         recipient=user_email
-#     )
-#     db = init_db_temporary_tokens()
-#     db.users.insert_one({"user_id": id, "token": token})
-#     response = {"message": "url para mudar de senha enviada", "email": user_email}
-#     return response, 200
-
-# def change_password(token, data):
-#     db = init_db_temporary_tokens()
-#     search = db.users.find_one({"token": token}, {"_id": 0})
-#     try:
-#         user_id = search["user_id"]
-#         newpassword = data["new_password"]
-#         user = user.get_by_id(user_id)
-#         hashed_password = generate_password_hash(newpassword)
-#         user.password = hashed_password
-#         user.save()
-#         response = {"message": "senha alterada com sucesso"}
-#         return response, 200
-#     except:
-#         response = {"message": "url invalida"}
-#         return response, 400
+    

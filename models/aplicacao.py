@@ -1,9 +1,5 @@
 from pydantic import BaseModel, Field
-from models.professor import Professor 
 from typing import List, Optional
-from models.processo_seletivo import ProcessoSeletivo
-from models.estudante import Estudante
-from models.projeto import Projeto 
 from database import init_db
 from bson import ObjectId
 

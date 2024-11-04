@@ -7,17 +7,15 @@ from routes.aplicacao_routes import aplicacao_routes
 from routes.projeto_routes import projeto_routes
 from routes.professor_routes import professor_routes
 from routes.estudante_routes import estudante_routes
-from flask_apscheduler import APScheduler
 from flask_cors import CORS
-from flask_mail import Mail
-mail = Mail()
+
 def create_app():
     app = Flask(__name__)
     app.config.from_object('config.Config')
     CORS(app)
 
     db = init_db()
-    mail.init_app(app)
+
     app.register_blueprint(auth_routes, url_prefix='/auth')
     app.register_blueprint(matchmaking_routes, url_prefix='/matchmaking')
     app.register_blueprint(processo_routes, url_prefix='/processo')
@@ -25,6 +23,7 @@ def create_app():
     app.register_blueprint(projeto_routes, url_prefix = '/projeto')
     app.register_blueprint(professor_routes, url_prefix = '/professor')
     app.register_blueprint(estudante_routes, url_prefix = '/estudante')
+    
     return app
 
 app = create_app()

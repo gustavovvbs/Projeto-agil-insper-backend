@@ -1,8 +1,5 @@
-from flask import Flask, request, jsonify, Blueprint
-from models import coordenador, estudante, professor, user 
+from flask import request, Blueprint
 from controllers.auth_controller import register_user, login_user
-from utils.auth_decorator import role_required
-
 
 auth_routes = Blueprint('auth', __name__)
 
@@ -20,15 +17,3 @@ def login():
     response = login_user(data)
 
     return response 
-
-# @auth_routes.route("/esqueci-senha/<str:idd>", methods=["GET"])
-# def retrieve_password(idd):
-#     response = create_token_and_send_email(idd)
-#     return response
-
-
-# @auth_routes.route("/recuperar/<str:token>", methods=["POST"])
-# def retrieve_password(token):
-#     data = request.get_json()
-#     response = create_token_and_send_email(token, data)
-#     return response

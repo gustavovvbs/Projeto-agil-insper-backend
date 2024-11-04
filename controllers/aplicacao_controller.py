@@ -3,7 +3,6 @@ from models.aplicacao import Aplicacao
 from models.projeto import Projeto
 from models.user import User
 from models.processo_seletivo import ProcessoSeletivo
-import os 
 import datetime
 from dotenv import load_dotenv 
 from botocore.exceptions import NoCredentialsError, PartialCredentialsError, ClientError

@@ -1,11 +1,5 @@
-from flask import Flask, Blueprint, request, jsonify
-from database import init_db
-from models.aplicacao import Aplicacao 
-from models.professor import Professor 
-from models.estudante import Estudante 
-from models.processo_seletivo import ProcessoSeletivo 
+from flask import Blueprint, request, jsonify
 from controllers.aplicacao_controller import create_aplicacao, get_all_aplicacoes, get_aplicacao_by_professor, check_processo_date, get_aplicacao_by_projeto,aprova_aplicacao,reprova_aplicacao
-import datetime
 from utils.jwt_auth import decode_jwt_token
 from utils.auth_decorator import role_required 
 

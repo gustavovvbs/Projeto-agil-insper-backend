@@ -1,5 +1,4 @@
-from flask import Flask, Blueprint, request, jsonify
-from models.estudante import Estudante
+from flask import Blueprint
 from controllers.estudante_controller import get_by_id
 
 estudante_routes = Blueprint('estudante', __name__)

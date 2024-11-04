@@ -1,6 +1,6 @@
 from utils.matchmaking import respond_query
 from utils.auth_decorator import role_required
-from flask import request, jsonify, Blueprint
+from flask import request, Blueprint
 
 matchmaking_routes = Blueprint('matchmaking', __name__)
 

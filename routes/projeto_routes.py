@@ -1,11 +1,7 @@
 from utils.auth_decorator import role_required
 from utils.jwt_auth import decode_jwt_token
-from models.projeto import Projeto
-from models.processo_seletivo import ProcessoSeletivo
-from models.professor import Professor
 from controllers.projeto_controller import create_projeto, update_projeto, get_projeto, get_all_projetos, delete_projeto, get_projetos_by_processo, check_processo_date, get_projeto_by_professor
-from bson import ObjectId
-from flask import Blueprint, request, jsonify, make_response
+from flask import Blueprint, request, jsonify
 
 projeto_routes = Blueprint('projeto', __name__)
 
@@ -28,7 +24,7 @@ def create():
     data = request.get_json()
     response = create_projeto(data)
 
-    return jsonify(response)
+    return jsonify(response[0]), response[1]
 
 @projeto_routes.route('/<id>', methods=['PUT'])
 @role_required(['coordenador', 'professor'])
@@ -63,7 +59,7 @@ def get(id: str):
 
     response = get_projeto(id)
 
-    return jsonify(response)
+    return jsonify(response[0]), response[1]
 
 @projeto_routes.route('/', methods=['GET'])
 def get_all():
