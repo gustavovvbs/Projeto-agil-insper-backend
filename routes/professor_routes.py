@@ -4,8 +4,7 @@ from utils.jwt_auth import decode_jwt_token
 from models.projeto import Projeto
 from models.processo_seletivo import ProcessoSeletivo
 from models.professor import Professor
-from controllers.professor_controller import get_by_id, get_all, get_projects_by_professor, get_project_by_id, get_applications_by_project_id
-from controllers.aplicacao_controller import get_aplicacao
+from controllers.professor_controller import get_by_id, get_all, get_projects_by_professor, get_project_by_id, get_applications_by_project_id, get_aplicacao
 from bson import ObjectId
 from flask import Blueprint, request, jsonify
 

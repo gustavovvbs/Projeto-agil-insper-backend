@@ -1,6 +1,6 @@
 from models.professor import Professor 
 from models.projeto import Projeto
-from aplicacao_controller import get_aplicacao_by_projeto
+from models.aplicacao import Aplicacao
 def get_by_id(id: str):
     professor = Professor.get_by_id(id)
     if not professor:
@@ -28,6 +28,10 @@ def get_project_by_id(id):
         return {"message": "No project found"}, 404
     return project, 200
 
+def get_aplicacao_by_projeto(id: str):
+    aplicacoes = Aplicacao.get_by_projeto(id)
+    return [aplicacao.dict() for aplicacao in aplicacoes]
+
 def get_applications_by_project_id(id):
     project = Projeto.get_by_id(id)
     if not project:
@@ -38,3 +42,6 @@ def get_applications_by_project_id(id):
     applications = [application.dict() for application in applications]
     return applications, 200
 
+def get_aplicacao(id: str):
+    aplicacao = Aplicacao.get_by_id(id)
+    return aplicacao.dict()
