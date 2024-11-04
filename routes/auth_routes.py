@@ -19,7 +19,7 @@ def login():
 
 @auth_routes.route("/esqueci-senha/<idd>", methods=["POST"])
 def request_password_reset(idd):
-    return create_token_and_send_email(idd))
+    return create_token_and_send_email(idd)
 
 @auth_routes.route("/recuperar/<token>", methods=["POST"])
 def reset_password(token):
