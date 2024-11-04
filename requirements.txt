@@ -11,7 +11,7 @@ langchain-pinecone
 uvicorn
 gunicorn
 pinecone-client 
-flask 
+flask_apscheduler
 langchain-core
 langchain-experimental 
 langchain-chroma 
