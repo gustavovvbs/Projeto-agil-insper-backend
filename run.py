@@ -12,6 +12,7 @@ from mail import mail
 from utils.email_service import handle_important_emails
 from datetime import datetime
 from flask_apscheduler import APScheduler
+
 def create_app():
     app = Flask(__name__)
     app.config.from_object('config.Config')
