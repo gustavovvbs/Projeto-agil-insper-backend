@@ -9,6 +9,7 @@ from database import init_db, init_db_temporary_tokens
 from mail import mail
 from flask_mail import Message
 from datetime import datetime, timedelta
+
 db = init_db()
 
 def register_user(data):
@@ -86,6 +87,7 @@ def login_user(data):
         "status": 200
     }
 
+
 def create_token_and_send_email(id):
     user = User.get_by_id(id)  
     if not user:
@@ -152,3 +154,4 @@ def change_password(token, data):
             return jsonify({"error": "Failed to update password"}), 500
     except Exception as e:
         return jsonify({"error": f"Failed to update password: {str(e)}"}), 500
+

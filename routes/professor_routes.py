@@ -1,3 +1,4 @@
+
 from utils.auth_decorator import role_required
 from utils.jwt_auth import decode_jwt_token
 from models.projeto import Projeto
@@ -7,6 +8,8 @@ from controllers.professor_controller import get_by_id, get_all, get_projects_by
 from controllers.aplicacao_controller import get_aplicacao
 from bson import ObjectId
 from flask import Blueprint, request, jsonify
+
+
 
 professor_routes = Blueprint('professor', __name__)
 

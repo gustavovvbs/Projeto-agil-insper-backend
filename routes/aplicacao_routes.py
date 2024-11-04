@@ -1,11 +1,5 @@
-from flask import Flask, Blueprint, request, jsonify
-from database import init_db
-from models.aplicacao import Aplicacao 
-from models.professor import Professor 
-from models.estudante import Estudante 
-from models.processo_seletivo import ProcessoSeletivo 
-from controllers.aplicacao_controller import create_aplicacao, get_all_aplicacoes, get_aplicacao_by_professor, check_processo_date, get_aplicacao_by_projeto
-import datetime
+from flask import Blueprint, request, jsonify
+from controllers.aplicacao_controller import create_aplicacao, get_all_aplicacoes, get_aplicacao_by_professor, check_processo_date, get_aplicacao_by_projeto,aprova_aplicacao,reprova_aplicacao
 from utils.jwt_auth import decode_jwt_token
 from utils.auth_decorator import role_required 
 
@@ -50,13 +44,7 @@ def get_by_professor():
     return jsonify(aplicacoes), 200
 
 @aplicacao_routes.route('/projeto/<string:id_projeto>', methods=['GET'])
-# @role_required(['professor'])
 def get_by_projeto(id_projeto):
-    # token = request.headers.get('Authorization').split(' ')[1]
-    # payload = decode_jwt_token(token)
-    # if payload['role'] != 'professor':
-    #     return jsonify({"error": "Unauthorized."}), 401
-    
     aplicacoes = get_aplicacao_by_projeto(id_projeto)
     date_check = check_processo_date(aplicacoes)
     if not date_check:
@@ -67,6 +55,12 @@ def get_by_projeto(id_projeto):
 
     return jsonify(aplicacoes), 200
 
+@aplicacao_routes.route('/<string:id_aplicacao>/projeto/<string:id_projeto>' , methods=['PUT'])
+@role_required(['professor'])
+def end_application_process(id_aplicacao,id_projeto):
+    reprova_aplicacao(id_projeto)
+    aprova_aplicacao(id_aplicacao)
+    return {'message': 'Success'}, 200
 
     
 

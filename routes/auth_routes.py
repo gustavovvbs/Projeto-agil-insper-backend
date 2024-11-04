@@ -1,6 +1,8 @@
+
 from flask import Flask, request, jsonify, Blueprint
 from models import coordenador, estudante, professor, user 
 from controllers.auth_controller import register_user, login_user, create_token_and_send_email, change_password
+
 
 auth_routes = Blueprint('auth', __name__)
 
@@ -12,6 +14,7 @@ def register():
 @auth_routes.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
+
     return login_user(data)
 
 @auth_routes.route("/esqueci-senha", methods=["POST"])

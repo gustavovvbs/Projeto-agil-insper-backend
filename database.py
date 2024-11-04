@@ -6,7 +6,3 @@ mongo = MongoClient(Config.MONGO_URI)
 def init_db():
     db = mongo['agil-db']
     return db
-
-def init_db_temporary_tokens():
-    db = mongo["agil-db-temporary-tokens"]
-    return db

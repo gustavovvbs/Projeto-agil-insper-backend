@@ -15,3 +15,5 @@ class Config:
     MAIL_USERNAME = 'your-email@gmail.com'
     MAIL_PASSWORD = 'your-app-password'
     MAIL_DEFAULT_SENDER = 'your-email@gmail.com'
+    SECRET_KEY = os.environ.get('SECRET_KEY')
+

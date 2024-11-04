@@ -3,7 +3,6 @@ from models.aplicacao import Aplicacao
 from models.projeto import Projeto
 from models.user import User
 from models.processo_seletivo import ProcessoSeletivo
-import os 
 import datetime
 from dotenv import load_dotenv 
 from botocore.exceptions import NoCredentialsError, PartialCredentialsError, ClientError
@@ -55,6 +54,7 @@ def create_aplicacao(data: dict):
     estudante_id = data.form['estudante']
     processo_id = data.form['processo_seletivo']
     estudante_lattes = data.form['estudante_lattes']
+    status = data.form['status']
 
     projeto = Projeto.get_by_id(projeto_id)
     if not projeto:
@@ -74,7 +74,7 @@ def create_aplicacao(data: dict):
     pdf_url = upload_to_s3(file)
 
     if datetime.datetime.now() < processo.data_encerramento:
-        aplicacao = Aplicacao(pdf_url=pdf_url, estudante=estudante_id, projeto=projeto_id, processo_seletivo=processo_id, estudante_lattes=estudante_lattes)
+        aplicacao = Aplicacao(pdf_url=pdf_url, estudante=estudante_id, projeto=projeto_id, processo_seletivo=processo_id, estudante_lattes=estudante_lattes,status = status)
 
         aplicacao.save()
 
@@ -127,5 +127,13 @@ def check_processo_date(data: dict):
         return False
 
     return True
+    
+def aprova_aplicacao(id_aprovado: str):
+    data = {'status': 'aprovado', 'id':id_aprovado}
+    Aplicacao.update_all_aplications_from_a_project(data)
+
+def reprova_aplicacao(id_projeto: str):
+    data = {'status': 'não aprovado', 'projeto':id_projeto}
+    Aplicacao.update_all_aplications_from_a_project(data)
     
 

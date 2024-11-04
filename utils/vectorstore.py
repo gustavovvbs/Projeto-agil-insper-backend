@@ -1,11 +1,8 @@
 from langchain_openai import OpenAIEmbeddings
-from langchain_core.documents import Document
-from pinecone import Pinecone, ServerlessSpec 
-from pymongo import MongoClient
-import os 
+from pinecone import Pinecone
 from dotenv import load_dotenv 
 from langchain_pinecone import PineconeVectorStore 
-from uuid import uuid4
+
 
 
 load_dotenv()

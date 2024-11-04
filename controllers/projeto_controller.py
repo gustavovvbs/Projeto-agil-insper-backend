@@ -1,8 +1,6 @@
-from utils.auth_decorator import role_required
 from utils.jwt_auth import decode_jwt_token
 from models.projeto import Projeto 
 from models.processo_seletivo import ProcessoSeletivo
-from models.professor import Professor
 from bson import ObjectId
 import datetime
 
@@ -11,7 +9,9 @@ def create_projeto(data: dict):
 
     if not processo:
         return {'error': 'Processo does not exists'}, 400
-
+    if len(data) != 5:
+        return {'error': 'Bad Request'}, 400
+    
     projeto = Projeto(**data)
     projeto.save()
 

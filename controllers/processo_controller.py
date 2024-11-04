@@ -1,7 +1,4 @@
 from models.processo_seletivo import ProcessoSeletivo
-from datetime import date
-from utils.auth_decorator import role_required
-
 
 def create_processo(data: dict):
     processo = ProcessoSeletivo(**data)
@@ -31,6 +28,8 @@ def get_processo_by_id(id: str):
 
 def delete_processo(id: str):
     processo = ProcessoSeletivo.get_by_id(id)
+    if not processo:
+        return {'error': 'Processo not found'}, 404
     processo.delete()
     return {'message': f'Processo deleted successfully with id {id}'}, 200
 

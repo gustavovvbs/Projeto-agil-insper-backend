@@ -7,16 +7,15 @@ from routes.aplicacao_routes import aplicacao_routes
 from routes.projeto_routes import projeto_routes
 from routes.professor_routes import professor_routes
 from routes.estudante_routes import estudante_routes
-from flask_apscheduler import APScheduler
 from flask_cors import CORS
 from mail import mail
 from utils.email_service import handle_important_emails
 from datetime import datetime
+from flask_apscheduler import APScheduler
 def create_app():
     app = Flask(__name__)
     app.config.from_object('config.Config')
     CORS(app)
-    
     # Initialize extensions
     mail.init_app(app)
     scheduler = APScheduler()
@@ -40,6 +39,10 @@ def create_app():
     app.register_blueprint(projeto_routes, url_prefix='/projeto')
     app.register_blueprint(professor_routes, url_prefix='/professor')
     app.register_blueprint(estudante_routes, url_prefix='/estudante')
+
+
+    db = init_db()
+
     
     return app
 

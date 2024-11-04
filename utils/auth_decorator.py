@@ -14,6 +14,8 @@ def role_required(allowed_roles):
                 return jsonify({"error": user_data}), 403
             
             user_role = user_data.get('role')
+            if not user_role:
+                return jsonify({"error": "Unauthorized"}), 403
             if user_role not in allowed_roles:
                 return jsonify({"error": "Unauthorized"}), 403
             return func(*args, **kwargs)
