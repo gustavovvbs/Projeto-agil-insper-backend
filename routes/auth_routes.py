@@ -17,13 +17,9 @@ def login():
 
     return login_user(data)
 
-@auth_routes.route("/esqueci-senha", methods=["POST"])
-def request_password_reset():
-    data = request.get_json()
-    email = data.get('email')
-    if not email:
-        return jsonify({"error": "Email is required"}), 400
-    return create_token_and_send_email(email)
+@auth_routes.route("/esqueci-senha/<idd>", methods=["POST"])
+def request_password_reset(idd):
+    return create_token_and_send_email(idd))
 
 @auth_routes.route("/recuperar/<token>", methods=["POST"])
 def reset_password(token):
