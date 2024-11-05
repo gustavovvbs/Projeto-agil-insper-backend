@@ -62,8 +62,7 @@ def get(id: str):
     """
 
     response = get_projeto(id)
-
-    return jsonify(response)
+    return jsonify(response[0]), response[1] 
 
 @projeto_routes.route('/', methods=['GET'])
 def get_all():

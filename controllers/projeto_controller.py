@@ -10,7 +10,7 @@ def create_projeto(data: dict):
     if not processo:
         return {'error': 'Processo does not exists'}, 400
     if len(data) != 5:
-        return {'error': 'Bad Request'}, 400
+        return {'error': 'Bad Request'}, 409 
     
     projeto = Projeto(**data)
     projeto.save()
@@ -23,8 +23,6 @@ def create_projeto(data: dict):
 
 def update_projeto(data: dict, id: str):
     token = data['token']
-    if not token:
-        return {'error': 'You do not have permission to update this project'}, 403
     payload = decode_jwt_token(token)
 
     if payload['role'] == 'professor' and projeto.professor != payload['user_id']:
@@ -48,7 +46,7 @@ def get_projeto(id: str):
     if not projeto:
         return {'error': 'Projeto does not exists'}, 400
         
-    return projeto.dict()
+    return projeto.dict(), 200
 
 def get_projeto_by_professor(id_professor: str):
     projeto = Projeto.get_all_by_professors(id_professor=id_professor)

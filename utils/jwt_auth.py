@@ -1,5 +1,6 @@
 import jwt 
-from datetime import datetime, timedelta 
+from datetime import datetime, timedelta
+
 from config import Config 
 
 def create_jwt_token(user_id: str, role: str) -> str:
@@ -16,8 +17,6 @@ def decode_jwt_token(token: str) -> dict:
     try:
         payload = jwt.decode(token, Config.SECRET_KEY, algorithms=["HS256"])
         return payload 
-    except jwt.ExpiredSignatureError:
-        return {"error": "Token has expired"}
-    except jwt.InvalidTokenError:
+    except:
         return {"error": "Invalid token"}
 

@@ -47,7 +47,6 @@ class Projeto(BaseModel):
     def get_all_by_professors(cls, id_professor):
         db = init_db()
         projetos = list(db.projetos.find({"professor":id_professor}))
-        print(projetos)
         for projeto in projetos:
             projeto['id'] = str(projeto['_id'])
             projeto.pop('_id')

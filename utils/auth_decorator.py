@@ -8,7 +8,7 @@ def role_required(allowed_roles):
         def wrapper(*args, **kwargs):
             token = request.headers.get('Authorization')
             if not token:
-                return jsonify({"error": "Token is missing"}), 
+                return jsonify({"error": "Token is missing"}), 403
             user_data = decode_jwt_token(token.split(' ')[1])
             if isinstance(user_data, str):
                 return jsonify({"error": user_data}), 403
