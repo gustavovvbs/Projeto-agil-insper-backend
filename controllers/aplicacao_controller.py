@@ -6,11 +6,14 @@ from models.processo_seletivo import ProcessoSeletivo
 import datetime
 from dotenv import load_dotenv 
 from botocore.exceptions import NoCredentialsError, PartialCredentialsError, ClientError
+import PyPDF2
+from io import BytesIO
 
 load_dotenv()
 
 BUCKET_NAME = 'bucket-agil'
 
+s3_session = boto3.Session()
 
 def upload_to_s3(file):
     """
@@ -136,4 +139,23 @@ def reprova_aplicacao(id_projeto: str):
     data = {'status': 'não aprovado', 'projeto':id_projeto}
     Aplicacao.update_all_aplications_from_a_project(data)
     
+def get_aplicacao_pdf(id: str):
+    aplicacao = Aplicacao.get_by_id(id)
+    try:
+        obj = s3_session.client('s3').get_object(Bucket = 'bucket-agil', Key = aplicacao.pdf_url.split('bucket-agil.s3.amazonaws.com/')[1])
+
+        obj = obj['Body'].read()
+
+        read_pdf = PyPDF2.PdfReader(BytesIO(obj)) 
+
+        number_of_pages = len(read_pdf.pages)
+        text = ''
+        for i in range(number_of_pages):
+            page = read_pdf.pages[i]
+            text += page.extract_text()
+        return text
+    except Exception as e:
+        return {'error': str(e)}, 400
+
+
 
