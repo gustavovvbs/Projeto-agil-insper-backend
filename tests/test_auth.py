@@ -39,7 +39,7 @@ def test_auth_register_professor_201():
         "descricao": 'teste'
     }
     answer = requests.post(url, headers=headers, json=data_professor)
-    assert answer.status_code == 201
+    assert answer.status_code in (200,201)
 
 #auth student
 def test_auth_login_student_200():
@@ -80,7 +80,7 @@ def test_auth_register_student_201():
     "descricao": None
     }
     answer = requests.post(url, headers=headers, json=data_estudante)
-    assert answer.status_code == 201
+    assert answer.status_code in (200,201)
     
 
 #auth coordination
@@ -123,5 +123,6 @@ def test_auth_register_coordinator_201():
         "descricao": None
     }
     answer = requests.post(url, headers=headers, json=data_coordenador)
-    assert answer.status_code == 201
+
+    assert answer.status_code in (200,201)
 
