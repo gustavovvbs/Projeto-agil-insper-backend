@@ -29,13 +29,26 @@ def register_user(data):
         return jsonify({"error": "User already exists"}), 400
     
     if role == 'estudante':
-        estudante = Estudante(nome, email, curso, semestre)
+        estudante = Estudante(
+            nome=nome, 
+            email=email, 
+            curso=curso, 
+            semestre=semestre
+            )
         estudante.save()
     elif role == 'coordenador':
-        coordenador = Coordenador(nome, email)
+        coordenador = Coordenador(
+            nome=nome, 
+            email=email
+            )
         coordenador.save()
     if role == 'professor':
-        professor = Professor(nome, email, area_pesquisa, descricao)
+        professor = Professor(
+            nome=nome,
+            email=email,
+            area_pesquisa=area_pesquisa,
+            descricao=descricao
+        )
         professor.save()
     
     hashed_password = generate_password_hash(password)

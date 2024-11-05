@@ -3,6 +3,7 @@ from database import init_db
 from bson import ObjectId
 
 class Professor(BaseModel):
+    
     id: str = Field(None, title="ID", description="ID do professor")
     nome: str = Field(..., title="Nome", description="Nome do professor")
     email: str = Field(..., title="Email", description="Email do professor")
