@@ -25,6 +25,8 @@ class Professor(BaseModel):
     def get_by_id(cls, id: str):
         db = init_db()
         professor = db.users.find_one({'_id': ObjectId(id)})
+        if not professor:
+            return None
         professor = db.professores.find_one({'email': professor['email']})
         if not professor:
             return None

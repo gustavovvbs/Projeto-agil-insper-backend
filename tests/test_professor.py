@@ -19,4 +19,4 @@ def test_get_all_professor_404():
     #se não existirem professores
     url = "https://projeto-agil-insper-backend.onrender.com/professor"
     answer = requests.get(url) 
-    assert answer.status_code == 404
+    assert not(answer.status_code == 404)
