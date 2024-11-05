@@ -38,7 +38,7 @@ def get_project(id_projeto):
 
     return response
 
-@professor_routes.route("/<id_professor>/projeto/<id_projeto>/aplicacoes", methods=["GET"])
+@professor_routes.route("/projeto/<id_projeto>/aplicacoes", methods=["GET"])
 @role_required(["professor"])
 def get_project_applications(id_projeto):
     response = get_applications_by_project_id(id_projeto)
