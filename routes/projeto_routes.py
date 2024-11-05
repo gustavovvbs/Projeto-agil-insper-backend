@@ -24,7 +24,6 @@ def create():
             "descricao": "descricao do projeto"
         }
     """
-
     data = request.get_json()
     response = create_projeto(data)
 

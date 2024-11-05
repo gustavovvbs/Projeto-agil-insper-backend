@@ -45,7 +45,8 @@ class Professor(BaseModel):
             
         for professor_professor, professor_user in zip(professores, professor_from_users_db):
             professor_professor['id'] = str(professor_user['_id'])
-            professor.pop('_id')
+            professor_professor.pop('_id')
+            
 
         professores = [cls(**professor) for professor in professores]
         return professores

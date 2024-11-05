@@ -47,19 +47,21 @@ class ProcessoSeletivo(BaseModel):
     @classmethod
     def get_by_id(cls, id: str):
         db = init_db()
-        processo = db.processos_seletivos.find_one({'_id': ObjectId(id)})
-        if not processo:
+        try:
+            processo = db.processos_seletivos.find_one({'_id': ObjectId(id)})
+            if not processo:
+                return None
+            processo['id'] = str(processo['_id'])
+            #popando o _id pq n ta no modelo
+            processo.pop('_id')
+
+            #p garantir em caso de por algum motivo ter salvo como objectid
+            for projeto in processo['projetos']:
+                projeto = str(projeto)
+
+            return cls(**processo) if processo else None
+        except:
             return None
-        processo['id'] = str(processo['_id'])
-        #popando o _id pq n ta no modelo
-        processo.pop('_id')
-
-        #p garantir em caso de por algum motivo ter salvo como objectid
-        for projeto in processo['projetos']:
-            projeto = str(projeto)
-
-        return cls(**processo) if processo else None
-
     @classmethod
     def update(cls, data):
         db = init_db()

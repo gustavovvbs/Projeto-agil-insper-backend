@@ -9,10 +9,22 @@ def create_projeto(data: dict):
 
     if not processo:
         return {'error': 'Processo does not exists'}, 400
-    if len(data) != 5:
+    if len(data) != 6:
         return {'error': 'Bad Request'}, 409 
-    
-    projeto = Projeto(**data)
+    temas = data.get("temas", [])
+    aplicacoes = data.get("aplicacoes", [])
+    if isinstance(temas, str):
+        temas = [temas]
+    if isinstance(aplicacoes, str):
+        aplicacoes = [aplicacoes]
+    projeto = Projeto(
+        processo_seletivo=data.get('processo_seletivo'),
+        titulo=data.get('titulo'),
+        professor=data.get("professor"),
+        temas=temas,
+        descricao=data.get("descricao"),
+        aplicacoes=aplicacoes
+        )
     projeto.save()
 
     processo.projetos.append(str(projeto.id))
@@ -20,7 +32,7 @@ def create_projeto(data: dict):
     processo.update({'projetos': processo.projetos, 'data_encerramento': processo.data_encerramento, 'id': projeto.processo_seletivo})
 
     return {'message': f'Projeto created successfully with id {projeto.id}'}, 201
-
+    
 def update_projeto(data: dict, id: str):
     token = data['token']
     payload = decode_jwt_token(token)
