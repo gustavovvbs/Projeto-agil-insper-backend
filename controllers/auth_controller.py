@@ -106,7 +106,7 @@ def create_token_and_send_email(email):
     if not user:
         return jsonify({"error": "User not found"}), 404
     
-        
+
     token = create_jwt_token(str(user["_id"]), user['role'], expires_in=3600) 
     
     reset_url = f"http://localhost:8000/auth/recuperar/{token}" 
@@ -142,6 +142,18 @@ def create_token_and_send_email(email):
         }), 200
     except Exception as e:
         return jsonify({"error": f"Failed to send email: {str(e)}"}), 500
+    
+def show_user_info_by_token(token):
+    temp_db = init_db_temporary_tokens()
+    token_record = temp_db.reset_tokens.find_one({
+        "token": token,
+        "expires_at": {"$gt": datetime.utcnow()}
+    })
+    if not token_record:
+        return jsonify({"error": "Invalid or expired reset token"}), 400
+    user = User.get_by_id(str(token_record["user_id"]))
+    user["_id"] = str(user["_id"])
+    return {"user":user}, 200
 
 def change_password(token, data):
     if not data or 'new_password' not in data:
