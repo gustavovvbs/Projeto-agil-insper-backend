@@ -42,7 +42,7 @@ def register_user(data):
             email=email
             )
         coordenador.save()
-    if role == 'professor':
+    elif role == 'professor':
         professor = Professor(
             nome=nome,
             email=email,
@@ -101,13 +101,12 @@ def login_user(data):
     }
 
 
-def create_token_and_send_email(id):
-    user = User.get_by_id(id)  
+def create_token_and_send_email(email):
+    user = User.find_by_email(email)  
     if not user:
         return jsonify({"error": "User not found"}), 404
     
-    email = user["email"]  
-    
+        
     token = create_jwt_token(str(user["_id"]), user['role'], expires_in=3600) 
     
     reset_url = f"http://localhost:8000/auth/recuperar/{token}" 
