@@ -52,7 +52,7 @@ def update(id):
     data['token'] = token
 
     response = update_projeto(data, id)
-    return jsonify(response)
+    return jsonify(response[0]), response[1]
 
 @projeto_routes.route('/<id>', methods=['GET'])
 def get(id: str):
