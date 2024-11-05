@@ -24,30 +24,30 @@ def get_all_professores():
 
     return response
 
-@professor_routes.route("/projetos/professor/<id>", methods=["GET"])
+@professor_routes.route("/<id_professor>/projeto", methods=["GET"])
 @role_required(["professor"])
-def get_all_projects(id):
-    response = get_projects_by_professor(id)
+def get_all_projects(id_professor):
+    response = get_projects_by_professor(id_professor)
 
     return response
 
-@professor_routes.route("/projetos/<id>", methods=["GET"])
+@professor_routes.route("/<id_professor>/projeto/<id_projeto>", methods=["GET"])
 @role_required(["professor"])
-def get_project(id):
-    response = get_project_by_id(id)
+def get_project(id_projeto):
+    response = get_project_by_id(id_projeto)
 
     return response
 
-@professor_routes.route("/projetos/<id>/aplicacoes", methods=["GET"])
+@professor_routes.route("/<id_professor>/projeto/<id_projeto>/aplicacoes", methods=["GET"])
 @role_required(["professor"])
-def get_project_applications(id):
-    response = get_applications_by_project_id(id)
+def get_project_applications(id_projeto):
+    response = get_applications_by_project_id(id_projeto)
     
     return response
 
 
-@professor_routes.route("/projetos/<id>/aplicacoes/<id_aplicacao>", methods=["GET"])
+@professor_routes.route("<id_professor>/projetos/<id_projeto>/aplicacoes/<id_aplicacao>", methods=["GET"])
 @role_required(["professor"])
-def get_application(id, id_aplicacao):
+def get_application(id_projeto, id_aplicacao):
     response = get_aplicacao(id_aplicacao)
     return response
