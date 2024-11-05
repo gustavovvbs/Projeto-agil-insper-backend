@@ -39,7 +39,7 @@ def get_applications_by_project_id(id):
     applications = get_aplicacao_by_projeto(id)
     if not applications:
         return {"message": "No applications found for this project"}, 200
-    applications = [application.dict() for application in applications]
+    applications = [application for application in applications]
     return applications, 200
 
 def get_aplicacao(id: str):
