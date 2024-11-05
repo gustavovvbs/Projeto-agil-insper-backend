@@ -28,7 +28,7 @@ def create_app():
         func=handle_important_emails,
         trigger='interval',
         days=5,
-        next_run_time = datetime.now()  # Run first time immediately
+        next_run_time = datetime.now()  # Run first tizme immediately
     )
     scheduler.start()
     
