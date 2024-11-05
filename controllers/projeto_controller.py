@@ -23,6 +23,8 @@ def create_projeto(data: dict):
 
 def update_projeto(data: dict, id: str):
     token = data['token']
+    if not token:
+        return {'error': 'You do not have permission to update this project'}, 403
     payload = decode_jwt_token(token)
 
     if payload['role'] == 'professor' and projeto.professor != payload['user_id']:
