@@ -28,7 +28,7 @@ def register_user(data):
     if User.find_by_email(email):
         return jsonify({"error": "User already exists"}), 400
     
-    if role == 'estudante':
+    if role == 'estudante' or role == "Estudante":
         estudante = Estudante(
             nome=nome, 
             email=email, 
@@ -36,13 +36,13 @@ def register_user(data):
             semestre=semestre
             )
         estudante.save()
-    elif role == 'coordenador':
+    elif role == 'coordenador' or role == "Coordenador":
         coordenador = Coordenador(
             nome=nome, 
             email=email
             )
         coordenador.save()
-    elif role == 'professor':
+    elif role == 'professor' or role == "Professor":
         professor = Professor(
             nome=nome,
             email=email,
