@@ -5,7 +5,6 @@ from flask import request, Blueprint
 matchmaking_routes = Blueprint('matchmaking', __name__)
 
 @matchmaking_routes.route('/query', methods=['POST'])
-@role_required(['estudante'])
 def query():
     data = request.get_json()
     response = respond_query(**data)
